@@ -50,7 +50,7 @@ SetCapsLockState, AlwaysOff
 ; Macro for launching apps.
 launch(win, prog) {
     if WinActive(win) {
-        WinMinimize
+        ;WinMinimize ; Do nothing instead.
     } else if WinExist(win) {
         WinActivate
         ControlFocus, , win
@@ -115,8 +115,8 @@ launch(win, prog) {
     }
     Return
 
-; Open (Ctrl-o).
-*sc1f::
+; Forward (Ctrl-f).
+*sc15::
     ControlGetFocus, c
     if (c = "SysTreeView321") {
         Send, {Right}{Enter}
@@ -152,7 +152,8 @@ launch(win, prog) {
     Return
 
 ; Specific mappings for WindowsTerminal.exe ..............................{{{1
-; Map Alt to Ctrl-Shift (instead of only Ctrl) to distinguish it from Capslock.
+; Map Alt to Ctrl-Shift (instead of only Ctrl) to distinguish it from Capslock,
+; has to be accounted for in terminal's mappings, like ctrl-shift-f for find.
 #if (WinActive("ahk_exe WindowsTerminal.exe")
         or WinActive("ahk_exe nvim-qt.exe"))
     and GetKeyState("LAlt", "P")
@@ -209,7 +210,8 @@ launch(win, prog) {
 *sc34::Send, +^.
 *sc35::Send, +^/
 
-; Since Alt-Shift now can't map to Ctrl-Shift, make it map to Alt-Shift.
+; Since Alt-Shift now can't map to Ctrl-Shift, make it map to Alt-Shift, means
+; the modifiers actually stay the same, the keys are in qwerty, though.
 #if (WinActive("ahk_exe WindowsTerminal.exe")
         or WinActive("ahk_exe nvim-qt.exe"))
     and GetKeyState("LAlt", "P")
@@ -240,8 +242,8 @@ launch(win, prog) {
 *sc17::Send, +!i
 *sc18::Send, +!o
 *sc19::Send, +!p
-*sc1a::Send, !p ; WindowsTerminal doesn't seem to recognize +![ and +!].
-*sc1b::Send, !n
+*sc1a::Send, !p ; WindowsTerminal doesn't seem to recognize +![ and +!]
+*sc1b::Send, !n ; (map prevTab/nextTab to alt-p/-n in settings.json)
 ; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +!a
 *sc1f::Send, +!s
@@ -467,7 +469,6 @@ launch(win, prog) {
 ; Move to right monitor (]).
 *sc1b::Send, #+{Right}
 
-
 ; Mappings for Alt .......................................................{{{1
 #if GetKeyState("Alt", "P")
     and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
@@ -543,7 +544,9 @@ launch(win, prog) {
 ; Special
 *sc0e::Send, ^{Backspace}
 *sc39::Send, #{sc1f}          ; Open Windows' search.
-vk01::Send, ^{LButton}        ; Wildcard remap breaks left click for Alt-Tab.
+vk01::Send, ^{LButton}        ; NOTE: using * breaks Alt-Tab.
+*WheelUp::Send, ^{WheelUp}
+*WheelDown::Send, ^{WheelDown}
 
 ; Mappings for Alt-Shift .................................................{{{1
 #if GetKeyState("Alt", "P")
@@ -685,12 +688,12 @@ vk01::Send, ^{LButton}        ; Wildcard remap breaks left click for Alt-Tab.
 *sc34::Send, ^v
 *sc35::Send, ^z
 ; Special
-*sc39::Send, !{vk00ba}               ; Remap C-SPC to Alt-; instead of ^{Space}
-                                     ; for Hunt-and-Peck
+;*sc39::Send, ^{Space}               ; Remap C-SPC for Hunt-and-Peck to Alt-;
+*sc39::Send, !{vk00ba}               ; instead, because its hotkey is hardcoded.
 
 ; Mappings for Ctrl-Alt ..................................................{{{1
 #if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and GetKeyState("Alt", "P")
+    and GetKeyState("LAlt", "P")
 *F11::MsgBox, - Ctrl-Alt -
 
 ; Open emoji list (Space).
@@ -845,6 +848,10 @@ vk01::Send, ^{LButton}        ; Wildcard remap breaks left click for Alt-Tab.
 *sc33::emit("W")
 *sc34::emit("V")
 *sc35::emit("Z")
+; Special
+*sc1c::emit("+{Enter}")
+*WheelUp::Send, +{WheelUp}
+*WheelDown::Send, +{WheelDown}
 
 ; Regular mappings........................................................{{{1
 #if
@@ -855,7 +862,7 @@ vk01::Send, ^{LButton}        ; Wildcard remap breaks left click for Alt-Tab.
 *sc02::Return
 *sc03::emit("{+}")
 *sc04::emit("*")
-*sc05::Return
+*sc05::emit("<")
 *sc06::Return
 *sc07::Return
 *sc08::Return
@@ -899,7 +906,7 @@ vk01::Send, ^{LButton}        ; Wildcard remap breaks left click for Alt-Tab.
 *sc30::emit("x")
 *sc31::emit("b", "@")
 *sc32::emit("m", ":")
-*sc33::emit("w", "<")
+*sc33::emit("w")
 *sc34::emit("v")
 *sc35::emit("z")
 ; Special
@@ -946,7 +953,8 @@ dead_or_emit(state, key := "", comb1 := "", comb2 := ""
     }
 }
 
-; Scan codes:
+; Scan codes .............................................................{{{1
+
 ;   Esc    F1 F2 F3 F4    F5 F6 F7 F8 F9 F10
 ;    01    3b 3c 3d 3e    3f 40 41 42 43 44
 ;     §  1  2  3  4  5  6  7  8  9  0  -  =   Back   Ins Hom PgU   /  *  -
@@ -958,7 +966,7 @@ dead_or_emit(state, key := "", comb1 := "", comb2 := ""
 ;  Shift `  z  x  c  v  b  n  m  ,  .  /      Shift        ^       1  2  3 Enter
 ;    2a 56 2c 2d 2e 2f 30 31 32 33 34 35       136        148     4f 50 51 11c
 ;  Ctrl      Alt       Space      AltGr       Ctrl      <-  v  ->   0  .
-;    1d      38          39         40         11d    14b 150 14d  52 53
+;    1d      38          39        138         11d    14b 150 14d  52 53
 ;
 ; For ahk's Send:
 ;   ^ Ctrl
