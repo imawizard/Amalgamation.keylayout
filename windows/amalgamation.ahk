@@ -59,6 +59,72 @@ launch(win, prog) {
     }
 }
 
+; Get explorer's current folder.
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
+; also, explore COM objects in PowerShell with:
+;   $w = (New-Object -ComObject Shell.Application).Windows(0)
+GetSHAppFolderPath(wnd = 0) {
+    if (!wnd) {
+        wnd := WinExist("A")
+    }
+    res := ""
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == wnd) {
+            res := window.Document.Folder.Self.Path
+            break
+        }
+    }
+    ObjRelease(com)
+    return res
+}
+
+; Get explorer's selected filenames.
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
+; and https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selecteditems
+GetSHAppSelectionPaths(wnd = 0) {
+    if (!wnd) {
+        wnd := WinExist("A")
+    }
+    res := ""
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == wnd) {
+            for item in window.Document.SelectedItems {
+                res := res . ";" . item.Path
+            }
+            res := Substr(res, 2)
+            break
+        }
+    }
+    ObjRelease(com)
+    return res
+}
+
+; Select a file in explorer.
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selectitem
+; and https://docs.microsoft.com/en-us/windows/win32/shell/folderitems
+FocusSHAppItem(filename, flags = 0, wnd = 0) {
+    if (!flags) {
+        flags := 1 + 2 + 4 + 8 + 16
+    }
+    if (!wnd) {
+        wnd := WinExist("A")
+    }
+    res := false
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == wnd) {
+            item := window.Document.Folder.ParseName(filename)
+            window.Document.SelectItem(item, flags)
+            res := true
+            break
+        }
+    }
+    ObjRelease(com)
+    return res
+}
+
 ; Global hotkeys .........................................................{{{1
 #if
 
@@ -80,6 +146,31 @@ launch(win, prog) {
 
 ; Specific mappings for explorer.exe .....................................{{{1
 #if WinActive("ahk_exe explorer.exe")
+    and !GetKeyState("LAlt", "P")
+    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
+    and !GetKeyState("Shift", "P")
+
+; Rename (Return).
+*sc1c::
+    ControlGetFocus, c
+    if (c = "DirectUIHWND2") {
+        Send, {F2}
+    } else {
+        Send, {Enter}
+    }
+    Return
+
+; Switch between explorer's sidebar and content (Tab).
+*sc0f::
+    ControlGetFocus, c
+    if (c = "DirectUIHWND2") {
+        Send, +{Tab}
+    } else {
+        Send, {Tab}
+    }
+    Return
+
+#if WinActive("ahk_exe explorer.exe")
     and GetKeyState("LAlt", "P")
     and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
     and !GetKeyState("Shift", "P")
@@ -93,9 +184,6 @@ launch(win, prog) {
 
 ; Delete (Alt-Backspace).
 *sc0e::Send, ^d
-
-; Rename (Alt-Return).
-*sc1c::Send, {F2}
 
 #if WinActive("ahk_exe explorer.exe")
     and (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
@@ -150,6 +238,52 @@ launch(win, prog) {
         Send, {Down}
     }
     Return
+
+#if WinActive("ahk_exe explorer.exe")
+    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
+    and GetKeyState("LAlt", "P")
+    and GetKeyState("LWin", "P")
+    and !GetKeyState("Shift", "P")
+*F11::MsgBox, - Alt-WinKey (explorer.exe) -
+
+; Copy file path (Alt-Win-c).
+*sc2e::
+    filepath := ""
+    ControlGetFocus, c
+    if (c = "DirectUIHWND2") {
+        filepath := GetSHAppSelectionPaths()
+    } else if (c = "SysTreeView321") {
+        filepath := GetSHAppFolderPath()
+    }
+    if filepath {
+        Clipboard := filepath
+    }
+    Return
+
+; Create new text file (Alt-Win-n).
+*sc31::
+    ControlGetFocus, c
+    cwd := GetSHAppFolderPath()
+    if (!cwd && Substr(cwd, 1, 2) = "::") {
+        Return
+    }
+    dest := cwd . "\Untitled"
+    ext := ".txt"
+    n := 1
+    loop {
+        if (n > 1) {
+            path := dest . n . ext
+        } else {
+            path := dest . ext
+        }
+        if !FileExist(path) {
+            FileOpen(path, "w")
+            SplitPath, path, filename
+            FocusSHAppItem(filename, 1 + 4 + 8 + 16)
+            Return
+        }
+        n++
+    }
 
 ; Specific mappings for WindowsTerminal.exe ..............................{{{1
 ; Map Alt to Ctrl-Shift (instead of only Ctrl) to distinguish it from Capslock,
