@@ -57,7 +57,7 @@
 			<key code="18"  output=""/>
 			<key code="19"  output="+"/>
 			<key code="20"  output="*"/>
-			<key code="21"  output=""/>
+			<key code="21"  output="&#x003C;"/>
 			<key code="23"  output=""/>
 			<key code="22"  output=""/>
 			<key code="26"  output=""/>
@@ -101,7 +101,7 @@
 			<key code="11"  output="x"/>
 			<key code="45"  action="normal-b"/>
 			<key code="46"  action="normal-m"/>
-			<key code="43"  action="normal-w"/>
+			<key code="43"  output="w"/>
 			<key code="47"  output="v"/>
 			<key code="44"  output="z"/>
 			<!-- Return Tab Space Back Esc -->
@@ -542,7 +542,7 @@
 			<key code="14"  action="option-acute"/>
 			<key code="15"  output="∏"/>
 			<key code="17"  output=""/>
-			<key code="16"  output="ƒ"/>
+			<key code="16"  output=""/>
 			<key code="32"  output=""/>
 			<key code="34"  output="ç"/>
 			<key code="31"  output="√"/>
@@ -959,10 +959,6 @@
 		<action id="normal-s">
 			<when state="none"              output="s"/>
 			<when state="Comma"             output="/"/>
-		</action>
-		<action id="normal-w">
-			<when state="none"              output="w"/>
-			<when state="Comma"             output="&#x003C;"/>
 		</action>
 		<action id="normal-b">
 			<when state="none"              output="b"/>

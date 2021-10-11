@@ -21,7 +21,7 @@ which is native to macOS.
 For features that are natively not possible, [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements)
 is used.
 
-### Features
+### [Features](Amalgamation.keylayout)
 
 #### Dvorak-like layout
 The main layout is mostly taken from Dvorak and US Qwerty with the number row
@@ -29,7 +29,7 @@ stripped down and a few other changes.
 
 Regular
 ```
-     §  ◌  +  *  ◌  ◌  ◌  ◌  >  (  )  -  =  Back
+     §  ◌  +  *  <  ◌  ◌  ◌  >  (  )  -  =  Back
    Tab   .  ;  ,  p  y  f  g  c  r  l  [  ] Return
   Caps   a  o  e  i  u  d  h  t  n  s  !  \
   Shift `  •  q  j  k  x  b  m  w  v  z     Shift
@@ -68,20 +68,22 @@ for the Qwerty combinations which is handy when using a mouse.
 Note: `y` and `z` are switched like in Qwertz.
 
 #### Symbols through Dead Key
-The comma acts as a dead key and introduces a small new layer that consists of
-various symbols. If any non-mapped key follows the dead key, both a comma and
-that non-mapped key is output.
+The comma in between of `;` and `p` acts as a dead key and introduces a small
+new layer that consists of various symbols. So upon pressing `,`, a second key
+can be pressed to result in a different key instead. If any non-mapped key
+follows the dead key, both a comma and that non-mapped key is output.
 
 ```
      ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  ◌  Back
-   Tab   ◌  '  ,  "  #  F  _  [  ]  ~  ◌  ◌ Return
+   Tab   ◌  '  ,  "  #  ◌  _  [  ]  ~  ◌  ◌ Return
   Caps   ä  ö  ü  =  \  $  -  {  }  /  ◌  ◌
-  Shift ◌  ◌  ◌  ◌  %  ◌  @  :  <  ◌  ◌     Shift
+  Shift ◌  ◌  ◌  ◌  %  ◌  @  :  ◌  ◌  ◌     Shift
   Fn  Ctrl  Opt  Cmd   Space    Cmd  Opt     Ctrl
 ```
 
 #### More Symbols through Option
-`fbhd` are not mapped, see [General Remaps](#general-remaps).
+`⌥fbhd` are not mapped to symbols but actions, see
+[General Remaps](#general-remaps).
 
 Option
 ```
@@ -103,7 +105,7 @@ Shifted Option
 ```
 `´` is a dead key. Combinators are like above, plus `y`.
 
-### Features by means of Karabiner Elements
+### [Features by means of Karabiner Elements](karabiner-rules.json)
 
 #### Right Shift-Numpad
 ```
@@ -118,9 +120,10 @@ Shifted Option
 
 - Capslock is remapped to Ctrl, `⌃c` is remapped to `Esc`, while `⌃[` is
   remapped to original `⌃c`
-- `§` acts like `F11` and shows the desktop
-- `⌥f` is _forward-word_ (`⌥→`) and `⌥b` is _backward-word_ (`⌥←`) (combinable with Shift)
-- `⌥h` is _backward-kill-word_ (`⌥BS`) and `⌥d` is _kill-word_ (`⌥Del`)
+- `§` shows the desktop (`F11`)
+- `⌥f` is remapped to `⌥→` (_forward-word_), `⌥b` to `⌥←` (_backward-word_),
+  both combinable with Shift
+- `⌥h` is remapped to `⌥BS` (_backward-kill-word_), `⌥d` to `⌥Del` (_kill-word_)
 
 #### App-specific Remaps
 
@@ -198,7 +201,7 @@ virtual keys. However, since resorting to _AutoHotkey_ is still necessary for
 emitting special keys or creating custom modifiers¹ , it's more comfortable to
 have the complete layout as a single ahk script.
 
-It tries to mimic the behaviour on macOS as close as possible, see
+It tries to mimic the behaviour on macOS as closely as possible, see
 [amalgamation.ahk](windows).
 
 ¹ It's actually possible to specify own modifiers in the data structs that a
