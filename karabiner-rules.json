@@ -67,7 +67,7 @@
 			]
 		},
 		{
-			"description": "[Amalgamation] Navigation with C-p/C-n in various apps",
+			"description": "[Amalgamation] Navigation with C-p/-n and C-f/-b in various apps",
 			"manipulators": [
 				{ "type": "basic", "from": { "key_code": "r", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "up_arrow" }],
 				"conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": [
@@ -90,42 +90,42 @@
 					"^com\\.apple\\.ActivityMonitor$",
 					"^com\\.apple\\.AddressBook$",
 					"^com\\.bohemiancoding\\.sketch3$"
+				] }] },
+				{ "type": "basic", "from": { "key_code": "y", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "right_arrow" }],
+				"conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": [
+					"^com\\.apple\\.finder$",
+					"^com\\.kapeli\\.dashdoc$",
+					"^co\\.gitup\\.mac$",
+					"^com\\.hicknhacksoftware\\.MacPass$",
+					"^com\\.operasoftware\\.Opera$",
+					"^com\\.apple\\.ActivityMonitor$",
+					"^com\\.apple\\.AddressBook$",
+					"^com\\.bohemiancoding\\.sketch3$"
+				] }] },
+				{ "type": "basic", "from": { "key_code": "n", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "left_arrow" }],
+				"conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": [
+					"^com\\.apple\\.finder$",
+					"^com\\.kapeli\\.dashdoc$",
+					"^co\\.gitup\\.mac$",
+					"^com\\.hicknhacksoftware\\.MacPass$",
+					"^com\\.operasoftware\\.Opera$",
+					"^com\\.apple\\.ActivityMonitor$",
+					"^com\\.apple\\.AddressBook$",
+					"^com\\.bohemiancoding\\.sketch3$"
 				] }] }
 			]
 		},
 		{
-			"description": "[Amalgamation] Navigation with C-o/C-b in Finder",
+			"description": "[Amalgamation] Custom hotkeys and navigation with C-a/-e in Finder",
 			"manipulators": [
-				{ "type": "basic", "from": { "key_code": "n", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "left_arrow"  }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "s", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "right_arrow" }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] }
-			]
-		},
-		{
-			"description": "[Amalgamation] Navigation with C-o/C-b in Activity Monitor",
-			"manipulators": [
-				{ "type": "basic", "from": { "key_code": "n", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "left_arrow"  }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.ActivityMonitor$"] }] },
-				{ "type": "basic", "from": { "key_code": "s", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "right_arrow" }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.ActivityMonitor$"] }] }
-			]
-		},
-		{
-			"description": "[Amalgamation] Navigation with C-o/C-b and C-k/C-j in Dash",
-			"manipulators": [
-
-				{ "type": "basic", "from": { "key_code": "n", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "left_arrow"                               }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.kapeli\\.dashdoc$"] }] },
-				{ "type": "basic", "from": { "key_code": "s", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "right_arrow"                              }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.kapeli\\.dashdoc$"] }] },
-				{ "type": "basic", "from": { "key_code": "v", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "up_arrow",   "modifiers": ["left_option"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.kapeli\\.dashdoc$"] }] },
-				{ "type": "basic", "from": { "key_code": "c", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "down_arrow", "modifiers": ["left_option"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.kapeli\\.dashdoc$"] }] }
-			]
-		},
-		{
-			"description": "[Amalgamation] File- and refresh-hotkeys in Finder",
-			"manipulators": [
-				{ "type": "basic", "from": { "key_code": "slash",  "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "f1", "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "d",      "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "f2", "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "period", "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "f3", "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "a",      "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "f4", "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "u",      "modifiers": { "mandatory": ["left_control"] } }, "to": [{ "key_code": "f5", "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
-				{ "type": "basic", "from": { "key_code": "r",      "modifiers": { "mandatory": ["left_command"] } }, "to": [{ "shell_command": "osascript -e 'tell application \"Finder\" to tell front window to update every item'" }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] }
+				{ "type": "basic", "from": { "key_code": "a",      "modifiers": { "mandatory": ["left_control"           ] } }, "to": [{ "key_code": "up_arrow",   "modifiers": ["left_option"                               ] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "d",      "modifiers": { "mandatory": ["left_control"           ] } }, "to": [{ "key_code": "down_arrow", "modifiers": ["left_option"                               ] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "slash",  "modifiers": { "mandatory": ["left_control"           ] } }, "to": [{ "key_code": "f1",         "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "period", "modifiers": { "mandatory": ["left_control"           ] } }, "to": [{ "key_code": "f2",         "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "slash",  "modifiers": { "mandatory": ["left_control", "command"] } }, "to": [{ "key_code": "f3",         "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "period", "modifiers": { "mandatory": ["left_control", "command"] } }, "to": [{ "key_code": "f4",         "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "u",      "modifiers": { "mandatory": ["left_control"           ] } }, "to": [{ "key_code": "f5",         "modifiers": ["left_control", "left_shift", "left_command"] }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] },
+				{ "type": "basic", "from": { "key_code": "r",      "modifiers": { "mandatory": ["left_command"           ] } }, "to": [{ "shell_command": "osascript -e 'tell application \"Finder\" to tell front window to update every item'" }], "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.finder$"] }] }
 			]
 		},
 		{
