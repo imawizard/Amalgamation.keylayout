@@ -472,7 +472,8 @@ SwitchToNextWindow(hwnd = 0) {
     Return
 
 ; Open Windows' search (Space).
-*sc39::Send, #{sc1f}
+*sc39::Send, {RAlt up}!{Space} ; Open PowerToys Run (Alt-Space) instead of
+                               ; Windows' search (#{sc1f}).
 
 ; Open fugly Task View (c).
 *sc17::Send, #{Tab}
@@ -692,7 +693,8 @@ SwitchToNextWindow(hwnd = 0) {
 *sc35::Send, ^/
 ; Special
 *sc0e::Send, ^{Backspace}
-*sc39::Send, #{sc1f}          ; Open Windows' search.
+*sc39::Send, !{Space}          ; Open PowerToys Run (Alt-Space) instead of
+                               ; Windows' search (#{sc1f}).
 vk01::Send, ^{LButton}        ; NOTE: using * breaks Alt-Tab.
 *WheelUp::Send, ^{WheelUp}
 *WheelDown::Send, ^{WheelDown}
