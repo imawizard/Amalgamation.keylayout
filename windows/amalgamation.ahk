@@ -125,6 +125,29 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
     return res
 }
 
+; Switch between an app's windows.
+SwitchToNextWindow(hwnd = 0) {
+    if !hwnd {
+        hwnd := WinExist("A")
+    }
+    WinGetClass, winclass, ahk_id %hwnd%
+    WinGet, procname, ProcessName, ahk_id %hwnd%
+    WinGet, windows, List, ahk_class %winclass%
+    i := windows + 1
+    loop {
+        if (--i = 0) {
+            break
+        }
+        window := windows%i%
+        WinGet, tmp, ProcessName, ahk_id %window%
+        if (tmp = procname) {
+            WinActivate, ahk_id %window%
+            break
+        }
+    }
+    return
+}
+
 ; Global hotkeys .........................................................{{{1
 #if
 
@@ -656,15 +679,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc28::Send, ^'
 *sc2b::Send, ^\
 ; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::                       ; Switch between an app's windows
-    WinGetClass, ActiveClass, A
-    WinGet, n, Count, ahk_class %ActiveClass%
-    if (n = 1) {
-        Return
-    }
-    WinSet, Bottom, , A
-    WinActivate, ahk_class %ActiveClass%
-    Return
+*sc56::SwitchToNextWindow()
 *sc2c::Send, ^y
 *sc2d::Send, ^x
 *sc2e::Send, ^c
