@@ -2,7 +2,6 @@
 <!DOCTYPE keyboard SYSTEM "file://localhost/System/Library/DTDs/KeyboardLayout.dtd">
 
 <!--                           AMALGAMATION.KEYLAYOUT                            -->
-<!--          Amalgamation of dvorak with qwerty and symbols for coding          -->
 <!--                                                                             -->
 <!-- for the specification of .keylayout-files see                               -->
 <!--    https://developer.apple.com/library/archive/technotes/tn2056/_index.html -->
@@ -11,39 +10,33 @@
 	<layouts>
 		<layout first="0" last="0" mapSet="ANSI" modifiers="commonModifiers"/>
 	</layouts>
-	<modifierMap id="commonModifiers" defaultIndex="7">
+	<modifierMap id="commonModifiers" defaultIndex="6">
 		<!-- NORMAL MODIFIER -->
 		<keyMapSelect mapIndex="0">
 			<modifier keys=""/>
 		</keyMapSelect>
-		<!-- LEFTSHIFT MODIFIER -->
+		<!-- SHIFT MODIFIER -->
 		<keyMapSelect mapIndex="1">
 			<modifier keys="shift caps?"/>
 		</keyMapSelect>
-		<!-- RIGHTSHIFT MODIFIER -->
-		<!-- Note: it is not being distinguished from LEFTSHIFT -->
-		<!-- see https://stackoverflow.com/a/45272971/11009994  -->
-		<keyMapSelect mapIndex="2">
-			<modifier keys="rightShift caps?"/>
-		</keyMapSelect>
 		<!-- COMMAND MODIFIER -->
-		<keyMapSelect mapIndex="3">
+		<keyMapSelect mapIndex="2">
 			<modifier keys="anyShift? caps? command"/>
 		</keyMapSelect>
 		<!-- OPTION MODIFIER -->
-		<keyMapSelect mapIndex="4">
+		<keyMapSelect mapIndex="3">
 			<modifier keys="anyOption"/>
 		</keyMapSelect>
 		<!-- SHIFTOPTION MODIFIER -->
-		<keyMapSelect mapIndex="5">
+		<keyMapSelect mapIndex="4">
 			<modifier keys="anyShift caps? anyOption command?"/>
 		</keyMapSelect>
 		<!-- COMMANDOPTION MODIFIER -->
-		<keyMapSelect mapIndex="6">
+		<keyMapSelect mapIndex="5">
 			<modifier keys="caps? anyOption command"/>
 		</keyMapSelect>
 		<!-- CONTROL MODIFIER -->
-		<keyMapSelect mapIndex="7">
+		<keyMapSelect mapIndex="6">
 			<modifier keys="anyShift caps? option? command? control"/>
 			<modifier keys="shift? caps? anyOption command? control"/>
 			<modifier keys="caps? anyOption? command? control"/>
@@ -53,61 +46,61 @@
 		<!-- NORMAL KEY-TABLE -->
 		<keyMap index="0">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
-			<key code="10"  output=""/>
-			<key code="18"  output=""/>
-			<key code="19"  output="+"/>
-			<key code="20"  output="*"/>
-			<key code="21"  output="&#x003C;"/>
+			<key code="10"  output="`"/>
+			<key code="18"  output="´"/>
+			<key code="19"  action="normal-langlebracket"/>
+			<key code="20"  action="normal-ranglebracket"/>
+			<key code="21"  output="="/>
 			<key code="23"  output=""/>
 			<key code="22"  output=""/>
 			<key code="26"  output=""/>
-			<key code="28"  output="&#x003E;"/>
+			<key code="28"  output="&#x0026;"/>
 			<key code="25"  output="("/>
 			<key code="29"  output=")"/>
-			<key code="27"  output="-"/>
-			<key code="24"  output="="/>
+			<key code="27"  action="normal-hyphen"/>
+			<key code="24"  output=""/>
 			<!--    q  w  e  r  t  y  u  i  o  p  [  ]  -->
-			<key code="12"  output="."/>
-			<key code="13"  action="normal-;"/>
-			<key code="14"  action="normal-,"/>
+			<key code="12"  output=";"/>
+			<key code="13"  output=","/>
+			<key code="14"  action="normal-dot"/>
 			<key code="15"  action="normal-p"/>
 			<key code="17"  action="normal-y"/>
 			<key code="16"  output="f"/>
-			<key code="32"  action="normal-g"/>
-			<key code="34"  action="normal-c"/>
-			<key code="31"  action="normal-r"/>
-			<key code="35"  action="normal-l"/>
+			<key code="32"  output="g"/>
+			<key code="34"  output="c"/>
+			<key code="31"  output="r"/>
+			<key code="35"  output="l"/>
 			<key code="33"  output="["/>
 			<key code="30"  output="]"/>
 			<!--     a  s  d  f  g  h  j  k  l  ;  '  \ -->
 			<key code="0"   action="normal-a"/>
 			<key code="1"   action="normal-o"/>
 			<key code="2"   action="normal-e"/>
-			<key code="3"   action="normal-i"/>
+			<key code="3"   output="i"/>
 			<key code="5"   action="normal-u"/>
-			<key code="4"   action="normal-d"/>
-			<key code="38"  action="normal-h"/>
-			<key code="40"  action="normal-t"/>
-			<key code="37"  action="normal-n"/>
+			<key code="4"   output="d"/>
+			<key code="38"  output="h"/>
+			<key code="40"  output="t"/>
+			<key code="37"  output="n"/>
 			<key code="41"  action="normal-s"/>
-			<key code="39"  output="!"/>
+			<key code="39"  action="normal-dquote"/>
 			<key code="42"  output="\"/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
-			<key code="50"  output="`"/>
-			<key code="6"   output="•"/>
+			<key code="50"  output=""/>
+			<key code="6"   output="%"/>
 			<key code="7"   output="q"/>
 			<key code="8"   output="j"/>
-			<key code="9"   action="normal-k"/>
-			<key code="11"  output="x"/>
-			<key code="45"  action="normal-b"/>
-			<key code="46"  action="normal-m"/>
-			<key code="43"  output="w"/>
-			<key code="47"  output="v"/>
+			<key code="9"   output="k"/>
+			<key code="11"  action="normal-x"/>
+			<key code="45"  output="b"/>
+			<key code="46"  output="m"/>
+			<key code="43"  action="normal-w"/>
+			<key code="47"  action="normal-v"/>
 			<key code="44"  output="z"/>
 			<!-- Return Tab Space Back Esc -->
 			<key code="36"  output="&#x000D;"/>
 			<key code="48"  output="&#x0009;"/>
-			<key code="49"  action="normal-space"/>
+			<key code="49"  output=" "/>
 			<key code="51"  output="&#x0008;"/>
 			<key code="53"  output="&#x001B;"/>
 			<key code="71"  output="&#x001B;"/>
@@ -164,26 +157,26 @@
 			<key code="125" output="&#x001F;"/>
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
-		<!-- LEFTSHIFT KEY-TABLE -->
+		<!-- SHIFT KEY-TABLE -->
 		<keyMap index="1">
 			<!-- ±  !  @  #  $  %  ^  &  *  (  )  _  +  -->
-			<key code="10"  output="±"/>
-			<key code="18"  output=""/>
-			<key code="19"  output=""/>
-			<key code="20"  output=""/>
-			<key code="21"  output=""/>
+			<key code="10"  output="~"/>
+			<key code="18"  action="shift-emark"/>
+			<key code="19"  output="@"/>
+			<key code="20"  output="#"/>
+			<key code="21"  output="$"/>
 			<key code="23"  output=""/>
 			<key code="22"  output=""/>
 			<key code="26"  output=""/>
-			<key code="28"  output=""/>
-			<key code="25"  output="|"/>
-			<key code="29"  output="&#x0026;"/>
-			<key code="27"  output="_"/>
-			<key code="24"  output="+"/>
+			<key code="28"  output="*"/>
+			<key code="25"  output="/"/>
+			<key code="29"  output="+"/>
+			<key code="27"  action="shift-hyphen"/>
+			<key code="24"  output=""/>
 			<!--    Q  W  E  R  T  Y  U  I  O  P  {  }  -->
-			<key code="12"  output="?"/>
+			<key code="12"  action="shift-qmark"/>
 			<key code="13"  output="^"/>
-			<key code="14"  output="`"/>
+			<key code="14"  action="shift-colon"/>
 			<key code="15"  output="P"/>
 			<key code="17"  output="Y"/>
 			<key code="16"  output="F"/>
@@ -196,27 +189,27 @@
 			<!--     A  S  D  F  G  H  J  K  L  :  "  | -->
 			<key code="0"   action="shift-a"/>
 			<key code="1"   action="shift-o"/>
-			<key code="2"   action="shift-e"/>
-			<key code="3"   action="shift-i"/>
+			<key code="2"   output="E"/>
+			<key code="3"   output="I"/>
 			<key code="5"   action="shift-u"/>
 			<key code="4"   output="D"/>
 			<key code="38"  output="H"/>
 			<key code="40"  output="T"/>
 			<key code="37"  output="N"/>
 			<key code="41"  output="S"/>
-			<key code="39"  output="ß"/>
+			<key code="39"  action="shift-squote"/>
 			<key code="42"  output="|"/>
 			<!--   ~  Z  X  C  V  B  N  M  <  >  ?      -->
-			<key code="50"  output="~"/>
-			<key code="6"   output="´"/>
+			<key code="50"  output=""/>
+			<key code="6"   action="mod"/>
 			<key code="7"   output="Q"/>
 			<key code="8"   output="J"/>
 			<key code="9"   output="K"/>
-			<key code="11"  output="X"/>
+			<key code="11"  action="shift-x"/>
 			<key code="45"  output="B"/>
 			<key code="46"  output="M"/>
 			<key code="43"  output="W"/>
-			<key code="47"  output="V"/>
+			<key code="47"  action="shift-v"/>
 			<key code="44"  output="Z"/>
 			<!-- Return Tab Space Back Esc -->
 			<key code="36"  output="&#x000D;"/>
@@ -278,22 +271,8 @@
 			<key code="125" output="&#x001F;"/>
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
-		<!-- RIGHTSHIFT KEY-TABLE -->
-		<keyMap index="2">
-			<key code="7"   output="1"/>
-			<key code="8"   output="2"/>
-			<key code="9"   output="3"/>
-			<key code="1"   output="4"/>
-			<key code="2"   output="5"/>
-			<key code="3"   output="6"/>
-			<key code="13"  output="7"/>
-			<key code="14"  output="8"/>
-			<key code="15"  output="9"/>
-			<key code="49"  output="0"/>
-			<key code="12"  output="."/>
-		</keyMap>
 		<!-- COMMAND KEY-TABLE -->
-		<keyMap index="3">
+		<keyMap index="2">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
 			<key code="10"  output="§"/>
 			<key code="18"  output="1"/>
@@ -314,7 +293,7 @@
 			<key code="14"  output="e"/>
 			<key code="15"  output="r"/>
 			<key code="17"  output="t"/>
-			<key code="16"  output="z"/>
+			<key code="16"  output="y"/>
 			<key code="32"  output="u"/>
 			<key code="34"  output="i"/>
 			<key code="31"  output="o"/>
@@ -336,7 +315,7 @@
 			<key code="42"  output="\"/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
 			<key code="50"  output="&#x003C;"/>
-			<key code="6"   output="y"/>
+			<key code="6"   output="z"/>
 			<key code="7"   output="x"/>
 			<key code="8"   output="c"/>
 			<key code="9"   output="v"/>
@@ -407,9 +386,9 @@
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
 		<!-- OPTION KEY-TABLE -->
-		<keyMap index="4">
+		<keyMap index="3">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
-			<key code="10"  output="→"/>
+			<key code="10"  output=""/>
 			<key code="18"  output="¹"/>
 			<key code="19"  output="²"/>
 			<key code="20"  output="³"/>
@@ -420,46 +399,46 @@
 			<key code="28"  output="⁸"/>
 			<key code="25"  output="⁹"/>
 			<key code="29"  output="⁰"/>
-			<key code="27"  output="–"/>
-			<key code="24"  output="≠"/>
+			<key code="27"  output=""/>
+			<key code="24"  output=""/>
 			<!--    q  w  e  r  t  y  u  i  o  p  [  ]  -->
-			<key code="12"  output="…"/>
-			<key code="13"  action="option-circumflex"/>
-			<key code="14"  action="option-grave"/>
-			<key code="15"  output="π"/>
-			<key code="17"  output="¥"/>
+			<key code="12"  output=""/>
+			<key code="13"  output=""/>
+			<key code="14"  output=""/>
+			<key code="15"  output=""/>
+			<key code="17"  output=""/>
 			<key code="16"  output=""/>
 			<key code="32"  output=""/>
-			<key code="34"  output="©"/>
-			<key code="31"  output="®"/>
+			<key code="34"  output=""/>
+			<key code="31"  output=""/>
 			<key code="35"  output=""/>
-			<key code="33"  output="‹"/>
-			<key code="30"  output="›"/>
+			<key code="33"  output=""/>
+			<key code="30"  output=""/>
 			<!--     a  s  d  f  g  h  j  k  l  ;  '  \ -->
-			<key code="0"   output="å"/>
-			<key code="1"   output="ø"/>
-			<key code="2"   output="€"/>
-			<key code="3"   output="ƒ"/>
-			<key code="5"   output="∂"/>
+			<key code="0"   output=""/>
+			<key code="1"   output=""/>
+			<key code="2"   output=""/>
+			<key code="3"   output=""/>
+			<key code="5"   output=""/>
 			<key code="4"   output=""/>
 			<key code="38"  output=""/>
-			<key code="40"  output="™"/>
+			<key code="40"  output=""/>
 			<key code="37"  output=""/>
-			<key code="41"  output="∫"/>
-			<key code="39"  output="¡"/>
-			<key code="42"  output="„"/>
+			<key code="41"  output=""/>
+			<key code="39"  output=""/>
+			<key code="42"  output=""/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
-			<key code="50"  output="◦"/>
-			<key code="6"   output="∙"/>
+			<key code="50"  output=""/>
+			<key code="6"   output=""/>
 			<key code="7"   output=""/>
 			<key code="8"   output=""/>
 			<key code="9"   output=""/>
-			<key code="11"  output="✗"/>
+			<key code="11"  output=""/>
 			<key code="45"  output=""/>
-			<key code="46"  output="𐄂"/>
-			<key code="43"  output="☐"/>
-			<key code="47"  output="✔︎"/>
-			<key code="44"  output="Ω"/>
+			<key code="46"  output=""/>
+			<key code="43"  output=""/>
+			<key code="47"  output=""/>
+			<key code="44"  output=""/>
 			<!-- Return Tab Space Back Esc -->
 			<key code="36"  output="&#x000D;"/>
 			<key code="48"  output="&#x0009;"/>
@@ -521,58 +500,58 @@
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
 		<!-- SHIFTOPTION KEY-TABLE -->
-		<keyMap index="5">
+		<keyMap index="4">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
-			<key code="10"  output="⟶"/>
+			<key code="10"  output=""/>
 			<key code="18"  output=""/>
-			<key code="19"  output="½"/>
-			<key code="20"  output="⅓"/>
-			<key code="21"  output="¼"/>
-			<key code="23"  output="⅔"/>
-			<key code="22"  output="¾"/>
+			<key code="19"  output=""/>
+			<key code="20"  output=""/>
+			<key code="21"  output=""/>
+			<key code="23"  output=""/>
+			<key code="22"  output=""/>
 			<key code="26"  output=""/>
 			<key code="28"  output=""/>
 			<key code="25"  output=""/>
 			<key code="29"  output=""/>
-			<key code="27"  output="—"/>
-			<key code="24"  output="±"/>
+			<key code="27"  output=""/>
+			<key code="24"  output=""/>
 			<!--    q  w  e  r  t  y  u  i  o  p  [  ]  -->
-			<key code="12"  output="¿"/>
+			<key code="12"  output=""/>
 			<key code="13"  output=""/>
-			<key code="14"  action="option-acute"/>
-			<key code="15"  output="∏"/>
+			<key code="14"  output=""/>
+			<key code="15"  output=""/>
 			<key code="17"  output=""/>
 			<key code="16"  output=""/>
 			<key code="32"  output=""/>
-			<key code="34"  output="ç"/>
-			<key code="31"  output="√"/>
+			<key code="34"  output=""/>
+			<key code="31"  output=""/>
 			<key code="35"  output=""/>
-			<key code="33"  output="«"/>
-			<key code="30"  output="»"/>
+			<key code="33"  output=""/>
+			<key code="30"  output=""/>
 			<!--     a  s  d  f  g  h  j  k  l  ;  '  \ -->
-			<key code="0"   output="Å"/>
-			<key code="1"   output="Ø"/>
-			<key code="2"   output="£"/>
+			<key code="0"   output=""/>
+			<key code="1"   output=""/>
+			<key code="2"   output=""/>
 			<key code="3"   output=""/>
-			<key code="5"   output="∆"/>
+			<key code="5"   output=""/>
 			<key code="4"   output=""/>
 			<key code="38"  output=""/>
-			<key code="40"  output="†"/>
+			<key code="40"  output=""/>
 			<key code="37"  output=""/>
-			<key code="41"  output="Σ"/>
+			<key code="41"  output=""/>
 			<key code="39"  output=""/>
-			<key code="42"  output="“"/>
+			<key code="42"  output=""/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
-			<key code="50"  output="⦾"/>
-			<key code="6"   output="⦿"/>
+			<key code="50"  output=""/>
+			<key code="6"   output=""/>
 			<key code="7"   output=""/>
 			<key code="8"   output=""/>
 			<key code="9"   output=""/>
-			<key code="11"  output="☒"/>
+			<key code="11"  output=""/>
 			<key code="45"  output=""/>
-			<key code="46"  output="µ"/>
-			<key code="43"  output="₩"/>
-			<key code="47"  output="︎☑"/>
+			<key code="46"  output=""/>
+			<key code="43"  output=""/>
+			<key code="47"  output="︎"/>
 			<key code="44"  output=""/>
 			<!-- Return Tab Space Back Esc -->
 			<key code="36"  output="&#x000D;"/>
@@ -635,7 +614,7 @@
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
 		<!-- COMMANDOPTION KEY-TABLE -->
-		<keyMap index="6">
+		<keyMap index="5">
 			<!-- unchanged US layout -->
 			<key code="0"   output="&#x0001;"/>
 			<key code="1"   output="&#x0013;"/>
@@ -746,13 +725,7 @@
 			<key code="126" output="&#x001E;"/>
 		</keyMap>
 		<!-- CONTROL KEY-TABLE -->
-		<!-- Special Ctrl-combinations:
-		       C-. => C-@
-		       C-; => C-^
-		       C-, => C-\
-		       C-! => C-_
-		-->
-		<keyMap index="7">
+		<keyMap index="6">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
 			<key code="10"  output="°"/>
 			<key code="18"  output="!"/>
@@ -768,9 +741,9 @@
 			<key code="27"  output="&#x001F;"/>
 			<key code="24"  output="`"/>
 			<!--    q  w  e  r  t  y  u  i  o  p  [  ]  -->
-			<key code="12"  output="&#x0000;"/>
-			<key code="13"  output="&#x001E;"/>
-			<key code="14"  output="&#x001C;"/>
+			<key code="12"  output="&#x0000;"/> <!-- C-@ -->
+			<key code="13"  output="&#x001E;"/> <!-- C-^ -->
+			<key code="14"  output=""/>
 			<key code="15"  output="&#x0010;"/>
 			<key code="17"  output="&#x0019;"/>
 			<key code="16"  output="&#x0006;"/>
@@ -791,7 +764,7 @@
 			<key code="40"  output="&#x0014;"/>
 			<key code="37"  output="&#x000E;"/>
 			<key code="41"  output="&#x0013;"/>
-			<key code="39"  output="&#x001F;"/>
+			<key code="39"  output="&#x001B;"/>
 			<key code="42"  output="&#x001C;"/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
 			<key code="50"  output="&#x003E;"/>
@@ -868,197 +841,110 @@
 		</keyMap>
 	</keyMapSet>
 	<actions>
-		<action id="normal-a">
-			<when state="none"              output="a"/>
-			<when state="Acute Accent"      output="á"/>
-			<when state="Circumflex Accent" output="â"/>
-			<when state="Comma"             output="ä"/>
-			<when state="Grave Accent"      output="à"/>
+		<action id="mod">
+			<when state="none" next="Mod"/>
 		</action>
-		<action id="normal-o">
-			<when state="none"              output="o"/>
-			<when state="Acute Accent"      output="ó"/>
-			<when state="Circumflex Accent" output="ô"/>
-			<when state="Comma"             output="ö"/>
-			<when state="Grave Accent"      output="ò"/>
+		<action id="shift-emark">
+			<when state="none" output="!"/>
+			<when state="Mod"  output="¡"/>
 		</action>
-		<action id="normal-e">
-			<when state="none"              output="e"/>
-			<when state="Acute Accent"      output="é"/>
-			<when state="Circumflex Accent" output="ê"/>
-			<when state="Comma"             output="ü"/>
-			<when state="Grave Accent"      output="è"/>
+		<action id="normal-langlebracket">
+			<when state="none" output="&#x003C;"/>
+			<when state="Mod"  output="«"/>
 		</action>
-		<action id="normal-i">
-			<when state="none"              output="i"/>
-			<when state="Acute Accent"      output="í"/>
-			<when state="Circumflex Accent" output="î"/>
-			<when state="Comma"             output="="/>
-			<when state="Grave Accent"      output="ì"/>
+		<action id="normal-ranglebracket">
+			<when state="none" output="&#x003E;"/>
+			<when state="Mod"  output="»"/>
 		</action>
-		<action id="normal-d">
-			<when state="none"              output="d"/>
-			<when state="Comma"             output="$"/>
+		<action id="normal-hyphen">
+			<when state="none" output="-"/>
+			<when state="Mod"  output="⟶"/>
 		</action>
-		<action id="normal-u">
-			<when state="none"              output="u"/>
-			<when state="Acute Accent"      output="ú"/>
-			<when state="Circumflex Accent" output="û"/>
-			<when state="Comma"             output="\"/>
-			<when state="Grave Accent"      output="ù"/>
+		<action id="shift-hyphen">
+			<when state="none" output="_"/>
+			<when state="Mod"  output="–"/>
 		</action>
-		<action id="normal-k">
-			<when state="none"              output="k"/>
-			<when state="Comma"             output="%"/>
+		<action id="shift-qmark">
+			<when state="none" output="?"/>
+			<when state="Mod"  output="¿"/>
 		</action>
-		<action id="normal-;">
-			<when state="none"              output=";"/>
-			<when state="Comma"             output="&#x0027;"/>
+		<action id="normal-dot">
+			<when state="none" output="."/>
+			<when state="Mod"  output="•"/>
 		</action>
-		<action id="normal-,">
-			<when state="none"              next="Comma"/>
-			<when state="Comma"             output=","/>
+		<action id="shift-colon">
+			<when state="none" output=":"/>
+			<when state="Mod"  output="…"/>
 		</action>
 		<action id="normal-p">
-			<when state="none"              output="p"/>
-			<when state="Comma"             output="&#x0022;"/>
+			<when state="none" output="p"/>
+			<when state="Mod"  output="£"/>
 		</action>
 		<action id="normal-y">
-			<when state="none"              output="y"/>
-			<when state="Acute Accent"      output="ý"/>
-			<when state="Comma"             output="#"/>
+			<when state="none" output="y"/>
+			<when state="Mod"  output="¥"/>
 		</action>
-		<action id="normal-r">
-			<when state="none"              output="r"/>
-			<when state="Comma"             output="]"/>
-		</action>
-		<action id="normal-g">
-			<when state="none"              output="g"/>
-			<when state="Comma"             output="_"/>
-		</action>
-		<action id="normal-c">
-			<when state="none"              output="c"/>
-			<when state="Comma"             output="["/>
-		</action>
-		<action id="normal-l">
-			<when state="none"              output="l"/>
-			<when state="Comma"             output="~"/>
-		</action>
-		<action id="normal-n">
-			<when state="none"              output="n"/>
-			<when state="Comma"             output="}"/>
-		</action>
-		<action id="normal-h">
-			<when state="none"              output="h"/>
-			<when state="Comma"             output="-"/>
-		</action>
-		<action id="normal-t">
-			<when state="none"              output="t"/>
-			<when state="Comma"             output="{"/>
-		</action>
-		<action id="normal-s">
-			<when state="none"              output="s"/>
-			<when state="Comma"             output="/"/>
-		</action>
-		<action id="normal-b">
-			<when state="none"              output="b"/>
-			<when state="Comma"             output="@"/>
-		</action>
-		<action id="normal-m">
-			<when state="none"              output="m"/>
-			<when state="Comma"             output=":"/>
-		</action>
-		<action id="normal-v">
-			<when state="none"              output="v"/>
-			<when state="Comma"             output=""/>
-		</action>
-		<!-- effect varies in apps -->
-		<action id="normal-return">
-			<when state="none"              output="&#x000D;"/>
-			<when state="Comma"             output=",&#x000D;"/>
-		</action>
-		<!-- effect varies in apps -->
-		<action id="normal-backspace">
-			<when state="none"              output="&#x0008;"/>
-			<when state="Comma"             output=""/>
-		</action>
-		<action id="normal-space">
-			<when state="none"              output=" "/>
-			<when state="Acute Accent"      output="´"/>
-			<when state="Circumflex Accent" output="^"/>
-			<when state="Comma"             output=", "/>
-			<when state="Grave Accent"      output="`"/>
+		<action id="normal-a">
+			<when state="none" output="a"/>
+			<when state="Mod"  output="ä"/>
 		</action>
 		<action id="shift-a">
-			<when state="none"              output="A"/>
-			<when state="Acute Accent"      output="Á"/>
-			<when state="Circumflex Accent" output="Â"/>
-			<when state="Comma"             output="Ä"/>
-			<when state="Grave Accent"      output="À"/>
+			<when state="none" output="A"/>
+			<when state="Mod"  output="Ä"/>
+		</action>
+		<action id="normal-o">
+			<when state="none" output="o"/>
+			<when state="Mod"  output="ö"/>
 		</action>
 		<action id="shift-o">
-			<when state="none"              output="O"/>
-			<when state="Acute Accent"      output="Ó"/>
-			<when state="Circumflex Accent" output="Ô"/>
-			<when state="Comma"             output="Ö"/>
-			<when state="Grave Accent"      output="Ò"/>
+			<when state="none" output="O"/>
+			<when state="Mod"  output="Ö"/>
 		</action>
-		<action id="shift-e">
-			<when state="none"              output="E"/>
-			<when state="Acute Accent"      output="É"/>
-			<when state="Circumflex Accent" output="Ê"/>
-			<when state="Comma"             output="Ü"/>
-			<when state="Grave Accent"      output="È"/>
+		<action id="normal-e">
+			<when state="none" output="e"/>
+			<when state="Mod"  output="€"/>
 		</action>
-		<action id="shift-i">
-			<when state="none"              output="I"/>
-			<when state="Acute Accent"      output="Í"/>
-			<when state="Circumflex Accent" output="Î"/>
-			<when state="Grave Accent"      output="Ì"/>
+		<action id="normal-u">
+			<when state="none" output="u"/>
+			<when state="Mod"  output="ü"/>
 		</action>
 		<action id="shift-u">
-			<when state="none"              output="U"/>
-			<when state="Acute Accent"      output="Ú"/>
-			<when state="Circumflex Accent" output="Û"/>
-			<when state="Grave Accent"      output="Ù"/>
+			<when state="none" output="U"/>
+			<when state="Mod"  output="Ü"/>
 		</action>
-		<action id="shift-y">
-			<when state="none"              output="Y"/>
-			<when state="Acute Accent"      output="Ý"/>
+		<action id="normal-s">
+			<when state="none" output="s"/>
+			<when state="Mod"  output="ß"/>
 		</action>
-		<action id="option-circumflex">
-			<when state="none"              next="Circumflex Accent"/>
-			<when state="Circumflex Accent" output="^^"/>
+		<action id="normal-dquote">
+			<when state="none" output="&#x0022;"/>
+			<when state="Mod"  output="“"/>
 		</action>
-		<action id="option-grave">
-			<when state="none"              next="Grave Accent"/>
-			<when state="Grave Accent"      output="``"/>
+		<action id="shift-squote">
+			<when state="none" output="'"/>
+			<when state="Mod"  output="”"/>
 		</action>
-		<action id="option-acute">
-			<when state="none"              next="Acute Accent"/>
-			<when state="Acute Accent"      output="´´"/>
+		<action id="normal-x">
+			<when state="none" output="x"/>
+			<when state="Mod"  output="✗"/>
+		</action>
+		<action id="shift-x">
+			<when state="none" output="X"/>
+			<when state="Mod"  output="☒"/>
+		</action>
+		<action id="normal-w">
+			<when state="none" output="w"/>
+			<when state="Mod"  output="₩"/>
+		</action>
+		<action id="normal-v">
+			<when state="none" output="v"/>
+			<when state="Mod"  output="✔︎"/>
+		</action>
+		<action id="shift-v">
+			<when state="none" output="V"/>
+			<when state="Mod"  output="☑"/>
 		</action>
 	</actions>
-	<!-- When having no terminator:
-		    1. there's no yellow background
-		    2. typing a non-combination key results in no more than that key
-		    3. some apps no longer falsely recognize the dead comma
-
-		 However, some keys like return seem to be special:
-		 when adding a combination that emits more than one key, then 1. and 3.
-		 strangely don't apply anymore.
-
-		 Generally, remapping keys like return and backspace is app-specific,
-		 some apps don't respect it at all, some would remap one or the other
-         (possibly having further restrictions like ascii-only) and some do
-		 actually handle it gracefully (happens only rarely, though).
-	-->
-	<terminators>
-		<when state="Acute Accent"      output="´"/>
-		<when state="Circumflex Accent" output="^"/>
-		<when state="Comma"             output=","/>
-		<when state="Grave Accent"      output="`"/>
-	</terminators>
 </keyboard>
 
 <!-- Key codes:
