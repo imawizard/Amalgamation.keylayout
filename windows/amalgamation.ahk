@@ -239,29 +239,69 @@ Pause::
 *sc34::
     filepath := ""
     ControlGetFocus, c
-    if (c == EXPLORER_CONTENT) {
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+    } else if (c == EXPLORER_CONTENT) {
         filepath := GetSHAppSelectionPaths()
     } else if (c == EXPLORER_SIDEBAR) {
         filepath := GetSHAppFolderPath()
     }
     if filepath {
-        Run, %EDITOR_RUN% "%filepath%"
+        Loop, Parse, filepath, `;
+        {
+            Run, %EDITOR_RUN% "%A_LoopField%"
+        }
     }
     Return
 
 ; Open folder in terminal with Ctrl-z
 *sc35::
-    ; TODO: If selected && folder, open selected folder in terminal
+    filepath := ""
     ControlGetFocus, c
     if (c == EXPLORER_DESKTOP) {
-        Run, wt.exe -d ., %HOME%\Desktop
+        filepath := GetDesktopSelectionPaths(c)
     } else {
-        Run, wt.exe -d ., % GetSHAppFolderPath()
+        filepath := GetSHAppSelectionPaths()
+        if !filepath {
+            filepath := GetSHAppFolderPath()
+        }
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(TERMINAL_RUN, "-d """ . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(TERMINAL_RUN, "-d """ . dirname . """")
+            }
+        }
     }
     Return
 
 ; Open folder in git gui with Ctrl-g
 *sc16::
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+    } else {
+        filepath := GetSHAppSelectionPaths()
+        if !filepath {
+            filepath := GetSHAppFolderPath()
+        }
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(GIT_GUI_RUN, "browse """ . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(GIT_GUI_RUN, "browse """ . dirname . """")
+            }
+        }
+    }
     Return
 
 ; .........................................................................}}}
@@ -299,10 +339,16 @@ Pause::
 
 ; Create new text file with Cmd-Opt-n
 *sc31::
-    cwd := GetSHAppFolderPath()
-    if (!cwd && Substr(cwd, 1, 2) == "::") {
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        cwd := A_Desktop
+    } else {
+        cwd := GetSHAppFolderPath()
+    }
+    if (!cwd || Substr(cwd, 1, 2) == "::") {
         Return
     }
+
     dest := cwd . "\Untitled"
     ext := ".txt"
     n := 1
@@ -1393,6 +1439,21 @@ GetSHAppSelectionPaths(hwnd := 0) {
     }
     ObjRelease(com)
     Return res
+}
+
+; Get the desktop's selection.
+GetDesktopSelectionPaths(ctrlClass) {
+    ControlGet, hwnd, Hwnd, , % ctrlClass
+    ControlGet, selected, List, Selected Col1,, ahk_id %hwnd%
+    Loop, Parse, selected, `n, `r
+    {
+        filepath := filepath . ";" . A_Desktop . "\" . A_LoopField
+    }
+    if filepath {
+        filepath := Substr(filepath, 2)
+    } else {
+        filepath := A_Desktop
+    }
 }
 
 ; Select a file within an explorer-window
