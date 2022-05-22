@@ -503,8 +503,8 @@ Pause::
 *sc56::Return
 *sc2c::Return
 *sc2d::Return
-*sc2e::Return
-*sc2f::Return
+*sc2e::CycleVisibleWindows("next")
+*sc2f::CycleVisibleWindows("prev")
 *sc30::Return
 *sc31::Return
 *sc32::Launch(MAIL_WIN, MAIL_RUN)
@@ -1444,6 +1444,213 @@ SwitchToNextWindow(hwnd := 0) {
         }
     }
     Return
+}
+
+; .........................................................................}}}
+
+; AltTabWindows ..........................................................{{{1
+
+; Taken from https://www.autohotkey.com/boards/viewtopic.php?t=28760#p326541
+AltTabWindows() {
+    Static WS_EX_APPWINDOW  := 0x40000
+    Static WS_EX_TOOLWINDOW := 0x80
+    Static GW_OWNER         := 4
+
+    res := []
+    DetectHiddenWindows, Off
+    WinGet, windows, List
+
+    Loop % windows {
+        hwnd := windows%A_Index%
+        owner := hwnd
+        Loop {
+            tmp := DllCall("GetWindow"
+                , "UInt", owner
+                , "UInt", GW_OWNER
+                , "Int")
+            if !tmp {
+                Break
+            }
+            owner := tmp
+        }
+
+        popup := DllCall("GetLastActivePopup"
+            , "UInt", owner
+            , "Int")
+        if (popup == hwnd) {
+            WinGet, style, ExStyle, ahk_id %hwnd%
+            if ((style & WS_EX_APPWINDOW || !(style & WS_EX_TOOLWINDOW))
+                && !IsInvisibleWin10BackgroundAppWindow(hwnd)) {
+                res.Push(Format("0x{:x}", hwnd))
+            }
+        }
+    }
+    Return res
+}
+
+IsInvisibleWin10BackgroundAppWindow(hwnd) {
+    DWMWA_CLOAKED          := 14
+    ;DWM_CLOAKED_APP       := 1
+    ;DWM_CLOAKED_SHELL     := 2
+    ;DWM_CLOAKED_INHERITED := 4
+
+    VarSetCapacity(value, A_PtrSize)
+    if DllCall("DwmApi\DwmGetWindowAttribute"
+        , "Ptr", hwnd
+        , "UInt", DWMWA_CLOAKED
+        , "Ptr", &value
+        , "UInt", A_PtrSize
+        , "Int") != 0 {
+        Return false
+    }
+    Return NumGet(value) != 0
+}
+
+; .........................................................................}}}
+
+; CycleVisibleWindows ....................................................{{{1
+
+; Predictable version of Send !{Escape}
+CycleVisibleWindows(dir := "next") {
+    windows := AltTabWindows()
+    visible := FilterNotVisibleWindows(windows)
+    if (visible.length() == 1) {
+        visible := windows
+    }
+    sorted := SortWindowsByAngle(visible, dir != "next")
+
+    Loop % sorted.length()
+        next := A_Index+1
+    Until (WinActive("A") == sorted[A_Index])
+
+    if (next > sorted.length()) {
+        next := 1
+    }
+
+    WinActivate, % "ahk_id" sorted[next]
+}
+
+FilterNotVisibleWindows(windows) {
+    RGN_AND       := 1
+    RGN_COPY      := 5
+    RGN_DIFF      := 4
+    RGN_OR        := 2
+    RGN_XOR       := 3
+    NULLREGION    := 1
+    SIMPLEREGION  := 2
+    COMPLEXREGION := 3
+
+    SysGet, workArea, MonitorWorkArea
+    combined := DllCall("CreateRectRgn"
+        , "Int", 0
+        , "Int", 0
+        , "Int", 0
+        , "Int", 0
+        , "UInt")
+
+    res := []
+    for i, hwnd in windows {
+        if DllCall("IsIconic"
+            , "UInt", hwnd
+            , "Int") {
+            Continue
+        }
+
+        WinGetPos, x, y, width, height, ahk_id %hwnd%
+
+        rgn := DllCall("CreateRectRgn"
+            , "Int", Max(x, workAreaLeft)
+            , "Int", Max(y, workAreaTop)
+            , "Int", Min(x + width, workAreaRight)
+            , "Int", Min(y + height, workAreaBottom)
+            , "UInt")
+
+        tmp := DllCall("CreateRectRgn"
+            , "Int", 0
+            , "Int", 0
+            , "Int", 0
+            , "Int", 0
+            , "UInt")
+
+        type := DllCall("CombineRgn"
+            , "UInt", tmp
+            , "UInt", rgn
+            , "UInt", combined
+            , "Int", RGN_DIFF
+            , "Int")
+
+        DllCall("DeleteObject"
+            , "UInt", tmp
+            , "Int")
+
+        if (type != NULLREGION) {
+            DllCall("CombineRgn"
+                , "UInt", combined
+                , "UInt", combined
+                , "UInt", rgn
+                , "Int", RGN_OR
+                , "Int")
+
+            res.Push(hwnd)
+        }
+
+        DllCall("DeleteObject"
+            , "UInt", rgn
+            , "Int")
+    }
+
+    DllCall("DeleteObject"
+        , "UInt", combined
+        , "Int")
+    Return res
+}
+
+SortWindowsByAngle(windows, reverse := false) {
+    list := ""
+    for i, hwnd in windows {
+        list .= "`n" . hwnd
+    }
+    list := Substr(list, 2)
+    Sort, list, F SortWindowsByAngleCallback
+
+    res := []
+    Loop, Parse, list, `n
+    {
+        if !reverse {
+            res.Push(A_LoopField)
+        } else {
+            res.InsertAt(1, A_LoopField)
+        }
+    }
+    Return res
+}
+
+SortWindowsByAngleCallback(a, b) {
+    v1 := GetTopLeftAsAngle(a)
+    v2 := GetTopLeftAsAngle(b)
+
+    if (v1 > v2) {
+        Return 1
+    } else if (v1 < v2) {
+        Return -1
+    } else {
+        Return a - b
+    }
+}
+
+GetTopLeftAsAngle(hwnd) {
+    Static xo := A_ScreenWidth / 2
+    Static yo := A_ScreenHeight / 2
+    Static PI := 4 * ATan(1)
+
+    WinGetPos, x, y, , , ahk_id %hwnd%
+    x := x - xo
+    y := y - yo
+
+    Return DllCall("msvcrt\atan2"
+        , "Double", y
+        , "Double", x
+        , "cdecl Double") * 180 / PI + 180
 }
 
 ; .........................................................................}}}
