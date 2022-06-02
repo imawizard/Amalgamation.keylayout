@@ -1049,12 +1049,12 @@ SwitchToNextWindow(hwnd = 0) {
 *sc08::Return
 *sc09::Send, *
 *sc0a::Send, /
-*sc0b::Send, {+}
-*sc0c::Send, _
+*sc0b::Send, &
+*sc0c::Send, {Text}``
 *sc0d::Return
 ; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, ?
-*sc11::Send, {Text}^
+*sc11::Send, =
 *sc12::Send, :
 *sc13::Send, P
 *sc14::Send, Y
@@ -1076,11 +1076,11 @@ SwitchToNextWindow(hwnd = 0) {
 *sc25::Send, T
 *sc26::Send, N
 *sc27::Send, S
-*sc28::Send, '
+*sc28::Send, _
 *sc2b::Send, |
 ; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
-*sc2c::Send, &
+*sc2c::Send, `%
 *sc2d::Send, Q
 *sc2e::Send, J
 *sc2f::Send, K
@@ -1099,18 +1099,18 @@ SwitchToNextWindow(hwnd = 0) {
 #if
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::Send, {Text}´
-*sc02::Send, {Text}``
+*sc29::Return
+*sc02::Send, {Text}^
 *sc03::Send, <
 *sc04::Send, >
-*sc05::Send, =
+*sc05::Send, "
 *sc06::Return
 *sc07::Return
 *sc08::Return
-*sc09::Send, {!}
+*sc09::Send, {+}
 *sc0a::Send, (
 *sc0b::Send, )
-*sc0c::Send, -
+*sc0c::Send, '
 *sc0d::Return
 ; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, {;}
@@ -1136,11 +1136,11 @@ SwitchToNextWindow(hwnd = 0) {
 *sc25::Send, t
 *sc26::Send, n
 *sc27::Send, s
-*sc28::Send, "
+*sc28::Send, -
 *sc2b::Send, \
 ; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
-*sc2c::Send, `%
+*sc2c::Send, {!}
 *sc2d::Send, q
 *sc2e::Send, j
 *sc2f::Send, k

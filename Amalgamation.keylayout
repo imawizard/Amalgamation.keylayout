@@ -46,18 +46,18 @@
 		<!-- NORMAL KEY-TABLE -->
 		<keyMap index="0">
 			<!-- §  1  2  3  4  5  6  7  8  9  0  -  =  -->
-			<key code="10"  output="´"/>
-			<key code="18"  output="`"/>
+			<key code="10"  output=""/>
+			<key code="18"  output="^"/>
 			<key code="19"  output="&#x003C;"/>
 			<key code="20"  output="&#x003E;"/>
-			<key code="21"  output="="/>
+			<key code="21"  output="&#x0022;"/>
 			<key code="23"  output=""/>
 			<key code="22"  output=""/>
 			<key code="26"  output=""/>
-			<key code="28"  output="!"/>
+			<key code="28"  output="+"/>
 			<key code="25"  output="("/>
 			<key code="29"  output=")"/>
-			<key code="27"  output="-"/>
+			<key code="27"  output="'"/>
 			<key code="24"  output=""/>
 			<!--    q  w  e  r  t  y  u  i  o  p  [  ]  -->
 			<key code="12"  output=";"/>
@@ -83,11 +83,11 @@
 			<key code="40"  output="t"/>
 			<key code="37"  output="n"/>
 			<key code="41"  output="s"/>
-			<key code="39"  output="&#x0022;"/>
+			<key code="39"  output="-"/>
 			<key code="42"  output="\"/>
 			<!--   `  z  x  c  v  b  n  m  ,  .  /      -->
 			<key code="50"  output=""/>
-			<key code="6"   output="%"/>
+			<key code="6"   output="!"/>
 			<key code="7"   output="q"/>
 			<key code="8"   output="j"/>
 			<key code="9"   output="k"/>
@@ -170,12 +170,12 @@
 			<key code="26"  output=""/>
 			<key code="28"  output="*"/>
 			<key code="25"  output="/"/>
-			<key code="29"  output="+"/>
-			<key code="27"  output="_"/>
+			<key code="29"  output="&#x0026;"/>
+			<key code="27"  output="`"/>
 			<key code="24"  output=""/>
 			<!--    Q  W  E  R  T  Y  U  I  O  P  {  }  -->
 			<key code="12"  output="?"/>
-			<key code="13"  output="^"/>
+			<key code="13"  output="="/>
 			<key code="14"  output=":"/>
 			<key code="15"  output="P"/>
 			<key code="17"  output="Y"/>
@@ -197,11 +197,11 @@
 			<key code="40"  output="T"/>
 			<key code="37"  output="N"/>
 			<key code="41"  output="S"/>
-			<key code="39"  output="'"/>
+			<key code="39"  output="_"/>
 			<key code="42"  output="|"/>
 			<!--   ~  Z  X  C  V  B  N  M  <  >  ?      -->
 			<key code="50"  output=""/>
-			<key code="6"   output="&#x0026;"/>
+			<key code="6"   output="%"/>
 			<key code="7"   output="Q"/>
 			<key code="8"   output="J"/>
 			<key code="9"   output="K"/>
