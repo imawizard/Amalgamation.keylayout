@@ -320,8 +320,62 @@ Pause::
 
 ; .........................................................................}}}
 
+#if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd | mod_shift
+*f1::MsgBox, Explorer, Modifiers: Cmd+Shift ; ............................{{{1
+
+*sc17:: ; Cmd+Shift+c
+    NavigateSHApp("shell:MyComputerFolder")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc19:: ; Cmd+Shift+l
+    NavigateSHApp("shell:Libraries")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc1e:: ; Cmd+Shift+a
+    NavigateSHApp("shell:AppsFolder")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc1f:: ; Cmd+Shift+o
+    NavigateSHApp("shell:DocumentsLibrary")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc21:: ; Cmd+Shift+i
+    NavigateSHApp("shell:OneDrive")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc22:: ; Cmd+Shift+u
+    NavigateSHApp("shell:Administrative Tools")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc23:: ; Cmd+Shift+d
+    NavigateSHApp("shell:Desktop")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc24:: ; Cmd+Shift+h
+    NavigateSHApp("shell:Profile")
+    Send, {Tab}{Up}{Home}
+    Return
+
+*sc2f:: ; Cmd+Shift+k
+    NavigateSHApp("shell:NetworkPlacesFolder")
+    Send, {Tab}{Up}{Home}
+    Return
+
+; .........................................................................}}}
+
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd | mod_opt
 *f1::MsgBox, Explorer, Modifiers: Cmd+Opt ; ..............................{{{1
+
+*sc19:: ; Cmd+Opt+l
+    NavigateSHApp("shell:Downloads")
+    Return
 
 ; Copy file path with Cmd-Opt-c
 *sc2e::
@@ -1472,6 +1526,26 @@ FocusSHAppItem(filename, flags := 0, hwnd := 0) {
         if (window && window.hwnd == hwnd) {
             item := window.Document.Folder.ParseName(filename)
             window.Document.SelectItem(item, flags)
+            res := true
+            Break
+        }
+    }
+    ObjRelease(com)
+    Return res
+}
+
+; Navigate within an explorer-window
+; Use file:/// or shell: with a folder name. For possible folder names, see
+; HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions
+NavigateSHApp(path, hwnd := 0) {
+    if (!hwnd) {
+        hwnd := WinExist("A")
+    }
+    res := false
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == hwnd) {
+            window.Navigate(path)
             res := true
             Break
         }
