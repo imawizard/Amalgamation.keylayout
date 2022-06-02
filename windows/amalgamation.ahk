@@ -413,6 +413,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 ;  1  2  3  4  5  6  7  8  9  0  -  =
 *sc02::Send, +!1
 *sc03::Send, +!2
+;*sc04::Send, +!3
 *sc05::Send, +!4
 *sc06::Send, +!5
 *sc07::Send, +!6
@@ -423,7 +424,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc0c::Send, +!-
 *sc0d::Send, +!=
 ; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Send, +!q
+;*sc10::Send, +!q
 *sc11::Send, +!w
 *sc12::Send, +!e
 *sc13::Send, +!r
@@ -441,7 +442,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc20::Send, +!d
 *sc21::Send, +!f
 *sc22::Send, +!g
-*sc23::Send, +!h
+;*sc23::Send, +!h
 *sc24::Send, +!j
 *sc25::Send, +!k
 *sc26::Send, +!l
@@ -578,30 +579,21 @@ launch(win, prog) {
     WinMove, A, , x, y
     Return
 
+; Numpad .................................................................{{{1
+
 #if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
     and GetKeyState("LAlt", "P")
 
-*sc16::emit("1")
-*sc17::emit("2")
-*sc18::emit("3")
-*sc24::emit("4")
-*sc25::emit("5")
-*sc26::emit("6")
-*sc27::emit("0")
-*sc32::emit("7")
-*sc33::emit("8")
-*sc34::emit("9")
-*sc02::emit("¹")
-*sc03::emit("²")
-*sc04::emit("³")
-*sc05::emit("⁴")
-*sc06::emit("⁵")
-*sc07::emit("⁶")
-*sc08::emit("⁷")
-*sc09::emit("⁸")
-*sc0a::emit("⁹")
-*sc0b::emit("⁰")
-;*sc0e::emit("{Backspace}")
+*sc16::Send, 1
+*sc17::Send, 2
+*sc18::Send, 3
+*sc24::Send, 4
+*sc25::Send, 5
+*sc26::Send, 6
+*sc27::Send, 0
+*sc32::Send, 7
+*sc33::Send, 8
+*sc34::Send, 9
 
 ; Qwerty ⌘ Cmd-layer with Alt ............................................{{{1
 
@@ -858,57 +850,57 @@ SwitchToNextWindow(hwnd = 0) {
     and !GetKeyState("Shift", "P")
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::Return
-*sc02::emit("¹")
-*sc03::emit("²")
-*sc04::emit("³")
-*sc05::emit("⁴")
-*sc06::emit("⁵")
-*sc07::emit("⁶")
-*sc08::emit("⁷")
-*sc09::emit("⁸")
-*sc0a::emit("⁹")
-*sc0b::emit("⁰")
-*sc0c::emit("–")
-*sc0d::Return
+*sc29::Send, !{sc29}
+*sc02::Send, ¹
+*sc03::Send, ²
+*sc04::Send, ³
+*sc05::Send, ⁴
+*sc06::Send, ⁵
+*sc07::Send, ⁶
+*sc08::Send, ⁷
+*sc09::Send, ⁸
+*sc0a::Send, ⁹
+*sc0b::Send, ⁰
+*sc0c::Send, –
+*sc0d::Send, !{sc0d}
 ; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Return
-*sc11::Return
-*sc12::Return
-*sc13::Return
-*sc14::Return
+*sc10::Send, !{sc10}
+*sc11::Send, !{sc11}
+*sc12::Send, …
+*sc13::Send, £
+*sc14::Send, ¥
 *sc15::Send, ^{Right}
-*sc16::Return
-*sc17::Return
-*sc18::Return
-*sc19::Return
-*sc1a::Return
-*sc1b::Return
+*sc16::Send, !{sc16}
+*sc17::Send, !{sc17}
+*sc18::Send, !{sc18}
+*sc19::Send, !{sc19}
+*sc1a::Send, !{sc1a}
+*sc1b::Send, !{sc1b}
 ; a  s  d  f  g  h  j  k  l  ;  '  \
-*sc1e::Return
-*sc1f::Return
-*sc20::Return
-*sc21::Return
-*sc22::Return
+*sc1e::Send, ä
+*sc1f::Send, ö
+*sc20::Send, €
+*sc21::Send, !{sc21}
+*sc22::Send, ü
 *sc23::Send, ^{Delete}
 *sc24::Send, ^{Backspace}
-*sc25::Return
-*sc26::Return
-*sc27::Return
-*sc28::Return
-*sc2b::Return
+*sc25::Send, !{sc25}
+*sc26::Send, !{sc26}
+*sc27::Send, ß
+*sc28::Send, !{sc28}
+*sc2b::Send, !{sc2b}
 ; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Return
-*sc2c::Return
-*sc2d::Return
-*sc2e::Return
-*sc2f::Return
-*sc30::Return
+*sc56::Send, !{sc56}
+*sc2c::Send, !{sc2c}
+*sc2d::Send, !{sc2d}
+*sc2e::Send, !{sc2e}
+*sc2f::Send, !{sc2f}
+*sc30::Send, ✗
 *sc31::Send, ^{Left}
-*sc32::Return
-*sc33::Return
-*sc34::Return
-*sc35::Return
+*sc32::Send, !{sc32}
+*sc33::Send, ₩
+*sc34::Send, ✔
+*sc35::Send, !{sc35}
 ; Special
 *sc1c::Send, !{Enter}
 *vk01::Send, !{LButton}
@@ -1004,7 +996,7 @@ SwitchToNextWindow(hwnd = 0) {
 *sc18::Send, ^r
 *sc19::Send, ^l
 *sc1a::Send, ^c                      ; Replace C-[ with C-c
-*sc1b::Send, ^a
+*sc1b::Send, ^{vkdd}
 ; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, ^a
 *sc1f::Send, ^o
@@ -1038,59 +1030,59 @@ SwitchToNextWindow(hwnd = 0) {
 #if GetKeyState("Shift")
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::emit("~")
-*sc02::emit("{!}", "¡")
-*sc03::emit("@")
-*sc04::emit("{#}")
-*sc05::emit("$")
+*sc29::Return
+*sc02::Send, ~
+*sc03::Send, @
+*sc04::Send, {#}
+*sc05::Send, $
 *sc06::Return
 *sc07::Return
 *sc08::Return
-*sc09::emit("*")
-*sc0a::emit("/")
-*sc0b::emit("{+}")
-*sc0c::emit("_", "–")
+*sc09::Send, *
+*sc0a::Send, /
+*sc0b::Send, {+}
+*sc0c::Send, _
 *sc0d::Return
 ; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::emit("?", "¿")
-*sc11::emit("{Text}^")
-*sc12::emit(":", "…")
-*sc13::emit("P")
-*sc14::emit("Y")
-*sc15::emit("F")
-*sc16::emit("G")
-*sc17::emit("C")
-*sc18::emit("R")
-*sc19::emit("L")
-*sc1a::emit("{{}")
-*sc1b::emit("{}}")
+*sc10::Send, ?
+*sc11::Send, {Text}^
+*sc12::Send, :
+*sc13::Send, P
+*sc14::Send, Y
+*sc15::Send, F
+*sc16::Send, G
+*sc17::Send, C
+*sc18::Send, R
+*sc19::Send, L
+*sc1a::Send, {{}
+*sc1b::Send, {}}
 ; a  s  d  f  g  h  j  k  l  ;  '  \
-*sc1e::emit("A", "Ä")
-*sc1f::emit("O", "Ö")
-*sc20::emit("E")
-*sc21::emit("I")
-*sc22::emit("U", "Ü")
-*sc23::emit("D")
-*sc24::emit("H")
-*sc25::emit("T")
-*sc26::emit("N")
-*sc27::emit("S")
-*sc28::emit("'", "”")
-*sc2b::emit("|")
+*sc1e::Send, A
+*sc1f::Send, O
+*sc20::Send, E
+*sc21::Send, I
+*sc22::Send, U
+*sc23::Send, D
+*sc24::Send, H
+*sc25::Send, T
+*sc26::Send, N
+*sc27::Send, S
+*sc28::Send, '
+*sc2b::Send, |
 ; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
-*sc2c::dead_or_emit("mod")
-*sc2d::emit("Q")
-*sc2e::emit("J")
-*sc2f::emit("K")
-*sc30::emit("X", "☒")
-*sc31::emit("B")
-*sc32::emit("M")
-*sc33::emit("W")
-*sc34::emit("V", "☑")
-*sc35::emit("Z")
+*sc2c::Send, &
+*sc2d::Send, Q
+*sc2e::Send, J
+*sc2f::Send, K
+*sc30::Send, X
+*sc31::Send, B
+*sc32::Send, M
+*sc33::Send, W
+*sc34::Send, V
+*sc35::Send, Z
 ; Special
-*sc1c::emit("+{Enter}")
+*sc1c::Send, +{Enter}
 *WheelUp::Send, +{WheelUp}
 *WheelDown::Send, +{WheelDown}
 
@@ -1098,87 +1090,59 @@ SwitchToNextWindow(hwnd = 0) {
 #if
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::emit("{Text}``")
-*sc02::emit("{Text}´")
-*sc03::emit("<", "«")
-*sc04::emit(">", "»")
-*sc05::emit("=")
+*sc29::Send, {Text}´
+*sc02::Send, {Text}``
+*sc03::Send, <
+*sc04::Send, >
+*sc05::Send, =
 *sc06::Return
 *sc07::Return
 *sc08::Return
-*sc09::emit("&")
-*sc0a::emit("(")
-*sc0b::emit(")")
-*sc0c::emit("-", "⟶")
+*sc09::Send, {!}
+*sc0a::Send, (
+*sc0b::Send, )
+*sc0c::Send, -
 *sc0d::Return
 ; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::emit(";")
-*sc11::emit(",")
-*sc12::emit(".", "•")
-*sc13::emit("p", "£")
-*sc14::emit("y", "¥")
-*sc15::emit("f")
-*sc16::emit("g")
-*sc17::emit("c")
-*sc18::emit("r")
-*sc19::emit("l")
-*sc1a::emit("[")
-*sc1b::emit("]")
+*sc10::Send, {;}
+*sc11::Send, ,
+*sc12::Send, .
+*sc13::Send, p
+*sc14::Send, y
+*sc15::Send, f
+*sc16::Send, g
+*sc17::Send, c
+*sc18::Send, r
+*sc19::Send, l
+*sc1a::Send, [
+*sc1b::Send, ]
 ; a  s  d  f  g  h  j  k  l  ;  '  \
-*sc1e::emit("a", "ä")
-*sc1f::emit("o", "ö")
-*sc20::emit("e", "€")
-*sc21::emit("i")
-*sc22::emit("u", "ü")
-*sc23::emit("d")
-*sc24::emit("h")
-*sc25::emit("t")
-*sc26::emit("n")
-*sc27::emit("s", "ß")
-*sc28::emit("""", "“")
-*sc2b::emit("\")
+*sc1e::Send, a
+*sc1f::Send, o
+*sc20::Send, e
+*sc21::Send, i
+*sc22::Send, u
+*sc23::Send, d
+*sc24::Send, h
+*sc25::Send, t
+*sc26::Send, n
+*sc27::Send, s
+*sc28::Send, "
+*sc2b::Send, \
 ; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
-*sc2c::emit("%")
-*sc2d::emit("q")
-*sc2e::emit("j")
-*sc2f::emit("k")
-*sc30::emit("x", "✗")
-*sc31::emit("b")
-*sc32::emit("m")
-*sc33::emit("w", "₩")
-*sc34::emit("v", "✔︎")
-*sc35::emit("z")
+*sc2c::Send, `%
+*sc2d::Send, q
+*sc2e::Send, j
+*sc2f::Send, k
+*sc30::Send, x
+*sc31::Send, b
+*sc32::Send, m
+*sc33::Send, w
+*sc34::Send, v
+*sc35::Send, z
 ; Special
-*sc1c::emit("{Enter}")
-*sc39::emit("{Space}")
 *F12::Send, #a
+*sc1c::Send, {Enter}
+*sc39::Send, {Space}
 
-; emit function ..........................................................{{{1
-emit(key := "", comb1 := "") {
-    Global deadstate
-
-    if deadstate {
-        if (deadstate = "mod") {
-            dead := ""
-            comb := comb1
-        }
-        deadstate := false
-        if comb {
-            Send, %comb%
-            Return
-        }
-        Send, %dead%
-    }
-    Send, %key%
-}
-
-dead_or_emit(state, key := "", comb1 := "") {
-    Global deadstate
-
-    if !deadstate {
-        deadstate := state
-    } else {
-        emit(key, comb1)
-    }
-}
