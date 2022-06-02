@@ -1,12 +1,25 @@
 ﻿#SingleInstance force
 #UseHook on
 #MaxHotkeysPerInterval 1000
+#WinActivateForce
+
+#NoEnv
+#KeyHistory 0
+ListLines, Off
+SetBatchLines, -1
+Process, Priority, , H
+SetWorkingDir, % A_ScriptDir
 
 title = Amalgamation.keylayout
+
+SetCapsLockState, AlwaysOff
+
+; Settings ...............................................................{{{1
 
 ; Map Alt to Ctrl-Shift
 GroupAdd, MASK_CMD_LAYER_INCLUDES, ahk_exe WindowsTerminal.exe
 GroupAdd, MASK_CMD_LAYER_INCLUDES, ahk_exe nvim-qt.exe
+GroupAdd, MASK_CMD_LAYER_INCLUDES, ahk_exe code.exe
 
 ; Exclusions when remapping C-h to Backspace etc
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe WindowsTerminal.exe
@@ -14,31 +27,72 @@ GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe cmd.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe nvim-qt.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe nvim.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe Emacs.exe
-GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe code.exe
+;GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe code.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe goneovim.exe
+
+; Env vars
+EnvGet, HOME, HOME
+EnvGet, HOMEDRIVE, HOMEDRIVE
 
 ; Apps to launch
 EXPLORER_WIN     := "ahk_class CabinetWClass"
-EXPLORER_RUN      = explorer.exe
+EXPLORER_RUN     := "explorer.exe"
 EDITOR_WIN       := "ahk_exe nvim-qt.exe"
-EDITOR_RUN        = %HOME%\scoop\apps\neovim\current\bin\nvim-qt.exe
+EDITOR_RUN       := HOME . "scoop\apps\neovim\current\bin\nvim-qt.exe"
+CODE_WIN         := "ahk_exe Code.exe"
+CODE_RUN         := HOME . "AppData\Local\Programs\Microsoft VS Code\Code.exe"
 TERMINAL_WIN     := "ahk_exe WindowsTerminal.exe"
-TERMINAL_RUN      = wt.exe
+TERMINAL_RUN     := "wt.exe"
 WEB_BROWSER_WIN  := "ahk_exe opera.exe"
-WEB_BROWSER_RUN   = %HOMEDRIVE%\Program Files\Opera\launcher.exe
+WEB_BROWSER_RUN  := HOMEDRIVE . "Program Files\Opera\launcher.exe"
 TASK_MANAGER_WIN := "ahk_exe ProcessHacker.exe"
-TASK_MANAGER_RUN  = taskmgr.exe
+TASK_MANAGER_RUN := "taskmgr.exe"
 GIT_GUI_WIN      := "ahk_exe gitextensions.exe"
-GIT_GUI_RUN       = %HOME%\scoop\apps\gitextensions\current\GitExtensions.exe
+GIT_GUI_RUN      := HOME . "scoop\apps\gitextensions\current\GitExtensions.exe"
 MAIL_WIN         := "ahk_exe outlook.exe"
-MAIL_RUN          = outlook.exe
+MAIL_RUN         := "outlook.exe"
 DOCSETS_WIN      := "ahk_exe zeal.exe"
-DOCSETS_RUN       = %HOME%\scoop\apps\zeal\current\zeal.exe
+DOCSETS_RUN      := HOME . "scoop\apps\zeal\current\zeal.exe"
 
 ; Explorer window controls
 EXPLORER_CONTENT := "DirectUIHWND2"
 EXPLORER_SIDEBAR := "SysTreeView321"
 EXPLORER_DESKTOP := "SysListView321"
+
+mod_none   := 0
+mod_cmd    := 1 << 0
+mod_shift  := 1 << 1
+mod_ctrl   := 1 << 2
+mod_opt    := 1 << 3
+
+modifiers() {
+    global
+
+    local flags := mod_none
+
+    if GetKeyState("LAlt", "P") {
+        flags := flags | mod_cmd
+    }
+    if GetKeyState("Shift", "P") {
+        flags := flags | mod_shift
+    }
+    if GetKeyState("Capslock", "P")
+        || (GetKeyState("Ctrl", "P") && !GetKeyState("RAlt", "P")) {
+        flags := flags | mod_ctrl
+    }
+    if GetKeyState("LWin", "P") || GetKeyState("RWin", "P") {
+        flags := flags | mod_opt
+    }
+    if GetKeyState("sc137", "P") {
+        flags := flags | mod_opt
+    }
+
+    Return flags
+}
+
+; .........................................................................}}}
+
+; tray and toggle ........................................................{{{1
 
 ; Adjust the tray menu
 Menu, Tray, Tip, %title%
@@ -63,10 +117,9 @@ Pause::
     }
     Return
 
-SetCapsLockState, AlwaysOff
+; .........................................................................}}}
 
-; Scan codes .............................................................{{{1
-
+; Scan codes:
 ;   Esc    F1 F2 F3 F4    F5 F6 F7 F8 F9 F10
 ;    01    3b 3c 3d 3e    3f 40 41 42 43 44
 ;     §  1  2  3  4  5  6  7  8  9  0  -  =   Back   Ins Hom PgU   /  *  -
@@ -80,6 +133,7 @@ SetCapsLockState, AlwaysOff
 ;  Ctrl Win  Alt       Space      AltGr  Prt  Ctrl      <-  v  ->   0  .
 ;    1d 15b  38          39        138   137   11d    14b 150 14d  52 53
 ;                                        15d
+;                                        15c
 ; For ahk's Send:
 ;   ^ Ctrl
 ;   + Shift
@@ -87,10 +141,9 @@ SetCapsLockState, AlwaysOff
 ;   # Win
 ;
 ; For windows shortcuts see
-;   https://docs.microsoft.com/de-de/archive/blogs/sebastianklenk/windows-10-keyboard-shortcuts-at-a-glance
-;   https://support.microsoft.com/de-de/windows/tastenkombinationen-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
+;   https://docs.microsoft.com/en-us/archive/blogs/sebastianklenk/windows-10-keyboard-shortcuts-at-a-glance
+;   https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
 
-; Global hotkeys .........................................................{{{1
 #if
 
 ; Disable Capslock if pressed alone
@@ -100,7 +153,7 @@ SetCapsLockState, AlwaysOff
 *sc38::
     Return
 *sc38 Up::
-    if (lalt_down = true) {
+    if (lalt_down == true) {
         Send, {LAlt up}
         lalt_down := false
     }
@@ -108,64 +161,38 @@ SetCapsLockState, AlwaysOff
 
 ; Disable WinKey if pressed alone
 *sc15b::Return
+*sc15c::Return
 
 ; Disable PrintScreen if pressed alone
 *sc137::Return
 *sc15d::Return
 
-; Make Explorer's shortcuts more like Finder's ...........................{{{1
-#if WinActive("ahk_exe explorer.exe")
-    and !GetKeyState("LAlt", "P")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Shift", "P")
+#if WinActive("ahk_exe explorer.exe") and modifiers() == mod_none
+*f1::MsgBox, Explorer, No modifiers ; ....................................{{{1
 
 ; Rename with Return
 *sc1c::
     ControlGetFocus, c
-    if (c = EXPLORER_CONTENT
-     || c = EXPLORER_DESKTOP
-     || c = EXPLORER_SIDEBAR) {
+    if (c == EXPLORER_CONTENT
+     || c == EXPLORER_DESKTOP
+     || c == EXPLORER_SIDEBAR) {
         Send, {F2}
     } else {
         Send, {Enter}
     }
     Return
 
-; As there's no column-view, make Tab switch between sidebar and content
-*sc0f::
-    ControlGetFocus, c
-    if (c = EXPLORER_CONTENT) {
-        Send, +{Tab}
-    } else {
-        Send, {Tab}
-    }
-    Return
+; .........................................................................}}}
 
-#if WinActive("ahk_exe explorer.exe")
-    and GetKeyState("LAlt", "P")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Shift", "P")
-
-; Open with Alt-o
-*sc18::Send, {Enter}
-
-; New window (no native tabs yet...) with Alt-t
-*sc14::Send, ^n
-
-; Delete with Alt-Backspace
-*sc0e::Send, ^d
-
-#if WinActive("ahk_exe explorer.exe")
-    and (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Alt", "P")
-    and !GetKeyState("Shift", "P")
+#if WinActive("ahk_exe explorer.exe") and modifiers() == mod_ctrl
+*f1::MsgBox, Explorer, Modifiers: Ctrl ; .................................{{{1
 
 ; Go one level up with Ctrl-b
 *sc31::
     ControlGetFocus, c
-    if (c = EXPLORER_SIDEBAR) {
+    if (c == EXPLORER_SIDEBAR) {
         Send, {Left}{Enter}
-    } else if (c = EXPLORER_CONTENT) {
+    } else if (c == EXPLORER_CONTENT) {
         Send, !{Up}
     } else {
         Send, {Left}
@@ -175,9 +202,9 @@ SetCapsLockState, AlwaysOff
 ; Go one level down with Ctrl-f
 *sc15::
     ControlGetFocus, c
-    if (c = EXPLORER_SIDEBAR) {
+    if (c == EXPLORER_SIDEBAR) {
         Send, {Right}{Enter}
-    } else if (c = EXPLORER_CONTENT) {
+    } else if (c == EXPLORER_CONTENT) {
         Send, {Enter}
     } else {
         Send, {Right}
@@ -187,9 +214,9 @@ SetCapsLockState, AlwaysOff
 ; Previous item with Ctrl-p
 *sc13::
     ControlGetFocus, c
-    if (c = EXPLORER_SIDEBAR) {
+    if (c == EXPLORER_SIDEBAR) {
         Send, {Up}{Enter}
-    } else if (c = EXPLORER_CONTENT) {
+    } else if (c == EXPLORER_CONTENT) {
         Send, {Up}
     } else {
         Send, {Up}
@@ -199,22 +226,22 @@ SetCapsLockState, AlwaysOff
 ; Next item with Ctrl-n
 *sc26::
     ControlGetFocus, c
-    if (c = EXPLORER_SIDEBAR) {
+    if (c == EXPLORER_SIDEBAR) {
         Send, {Down}{Enter}
-    } else if (c = EXPLORER_CONTENT) {
+    } else if (c == EXPLORER_CONTENT) {
         Send, {Down}
     } else {
         Send, {Down}
     }
     Return
 
-; Open selected file in editor
+; Open selected file in editor with Ctrl-v
 *sc34::
     filepath := ""
     ControlGetFocus, c
-    if (c = EXPLORER_CONTENT) {
+    if (c == EXPLORER_CONTENT) {
         filepath := GetSHAppSelectionPaths()
-    } else if (c = EXPLORER_SIDEBAR) {
+    } else if (c == EXPLORER_SIDEBAR) {
         filepath := GetSHAppFolderPath()
     }
     if filepath {
@@ -222,33 +249,47 @@ SetCapsLockState, AlwaysOff
     }
     Return
 
-; Open cwd in terminal
+; Open folder in terminal with Ctrl-z
 *sc35::
     ; TODO: If selected && folder, open selected folder in terminal
     ControlGetFocus, c
-    if (c = EXPLORER_DESKTOP) {
+    if (c == EXPLORER_DESKTOP) {
         Run, wt.exe -d ., %HOME%\Desktop
     } else {
         Run, wt.exe -d ., % GetSHAppFolderPath()
     }
     Return
 
-; TODO: Open cwd in git gui
+; Open folder in git gui with Ctrl-g
 *sc16::
     Return
 
-#if WinActive("ahk_exe explorer.exe")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and GetKeyState("LAlt", "P")
-    and (GetKeyState("LWin", "P") or GetKeyState("sc137", "P") or GetKeyState("sc15d", "P"))
+; .........................................................................}}}
 
-; Copy file path with Alt-Win-c
+#if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd
+*f1::MsgBox, Explorer, Modifiers: Cmd ; ..................................{{{1
+
+; Open with Cmd-o
+*sc18::Send, {Enter}
+
+; New window (no native tabs yet...) with Cmd-t
+*sc14::Send, ^n
+
+; Delete with Cmd-Backspace
+*sc0e::Send, ^d
+
+; .........................................................................}}}
+
+#if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd | mod_opt
+*f1::MsgBox, Explorer, Modifiers: Cmd+Opt ; ..............................{{{1
+
+; Copy file path with Cmd-Opt-c
 *sc2e::
     filepath := ""
     ControlGetFocus, c
-    if (c = EXPLORER_CONTENT) {
+    if (c == EXPLORER_CONTENT) {
         filepath := GetSHAppSelectionPaths()
-    } else if (c = EXPLORER_SIDEBAR) {
+    } else if (c == EXPLORER_SIDEBAR) {
         filepath := GetSHAppFolderPath()
     }
     if filepath {
@@ -256,16 +297,16 @@ SetCapsLockState, AlwaysOff
     }
     Return
 
-; Create new text file with Alt-Win-n
+; Create new text file with Cmd-Opt-n
 *sc31::
     cwd := GetSHAppFolderPath()
-    if (!cwd && Substr(cwd, 1, 2) = "::") {
+    if (!cwd && Substr(cwd, 1, 2) == "::") {
         Return
     }
     dest := cwd . "\Untitled"
     ext := ".txt"
     n := 1
-    loop {
+    Loop {
         if (n > 1) {
             path := dest . n . ext
         } else {
@@ -280,79 +321,14 @@ SetCapsLockState, AlwaysOff
         n++
     }
 
-; Get explorer's current folder
-; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
-; also, explore COM objects in PowerShell with:
-;   $w = (New-Object -ComObject Shell.Application).Windows(0)
-GetSHAppFolderPath(wnd = 0) {
-    if (!wnd) {
-        wnd := WinExist("A")
-    }
-    res := ""
-    com := ComObjCreate("Shell.Application")
-    for window in com.Windows {
-        if (window && window.hwnd == wnd) {
-            res := window.Document.Folder.Self.Path
-            break
-        }
-    }
-    ObjRelease(com)
-    return res
-}
+; .........................................................................}}}
 
-; Get explorer's selected filenames
-; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
-; and https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selecteditems
-GetSHAppSelectionPaths(wnd = 0) {
-    if (!wnd) {
-        wnd := WinExist("A")
-    }
-    res := ""
-    com := ComObjCreate("Shell.Application")
-    for window in com.Windows {
-        if (window && window.hwnd == wnd) {
-            for item in window.Document.SelectedItems {
-                res := res . ";" . item.Path
-            }
-            res := Substr(res, 2)
-            break
-        }
-    }
-    ObjRelease(com)
-    return res
-}
+#if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES") and modifiers() == mod_cmd
+*f1::MsgBox, Mask Cmd ; ..................................................{{{1
 
-; Select a file in explorer
-; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selectitem
-; and https://docs.microsoft.com/en-us/windows/win32/shell/folderitems
-FocusSHAppItem(filename, flags = 0, wnd = 0) {
-    if (!flags) {
-        flags := 1 + 2 + 4 + 8 + 16
-    }
-    if (!wnd) {
-        wnd := WinExist("A")
-    }
-    res := false
-    com := ComObjCreate("Shell.Application")
-    for window in com.Windows {
-        if (window && window.hwnd == wnd) {
-            item := window.Document.Folder.ParseName(filename)
-            window.Document.SelectItem(item, flags)
-            res := true
-            break
-        }
-    }
-    ObjRelease(com)
-    return res
-}
-
-; Mask Cmd-layer to tell it apart from the Ctrl-layer in some apps .......{{{1
-; Map Alt to Ctrl-Shift (instead of only Ctrl) to distinguish it from Capslock,
-; has to be accounted for in terminal's mappings, like ctrl-shift-f for find.
-#if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES")
-    and GetKeyState("LAlt", "P")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Shift", "P")
+; Don't map {Alt} to {Ctrl}, but to {Ctrl-Shift} so that {Alt} acts as Cmd- and
+; Capslock as Ctrl-layer. Shortcuts must be remapped in the particular apps,
+; like ctrl-shift-f for find etc.
 
 ;  1  2  3  4  5  6  7  8  9  0  -  =
 *sc02::Send, +^1
@@ -368,6 +344,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc0c::Send, +^-
 *sc0d::Send, +^=
 ; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::Send, +^q
 *sc11::Send, +^w
 *sc12::Send, +^e
 *sc13::Send, +^r
@@ -385,6 +362,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc20::Send, +^d
 *sc21::Send, +^f
 *sc22::Send, +^g
+;*sc23::Send, +^h
 *sc24::Send, +^j
 *sc25::Send, +^k
 *sc26::Send, +^l
@@ -403,17 +381,18 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc34::Send, +^.
 *sc35::Send, +^/
 
-; Since Alt-Shift now can't map to Ctrl-Shift, make it map to Alt-Shift, means
-; the modifiers actually stay the same, the keys are in qwerty, though.
-#if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES")
-    and GetKeyState("LAlt", "P")
-    and GetKeyState("Shift", "P")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
+; .........................................................................}}}
+
+#if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES") and modifiers() == mod_cmd | mod_shift
+*f1::MsgBox, Mask Cmd+Shift ; ............................................{{{1
+
+; Don't map {Alt-Shift} to {Ctrl-Shift}, but keep it as {Alt-Shift}, because the
+; former is already taken due to masking the Cmd-layer above.
 
 ;  1  2  3  4  5  6  7  8  9  0  -  =
 *sc02::Send, +!1
 *sc03::Send, +!2
-;*sc04::Send, +!3
+*sc04::Send, +!3
 *sc05::Send, +!4
 *sc06::Send, +!5
 *sc07::Send, +!6
@@ -435,7 +414,7 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc18::Send, +!o
 *sc19::Send, +!p
 *sc1a::Send, !p ; WindowsTerminal doesn't seem to recognize +![ and +!]
-*sc1b::Send, !n ; (NOTE: map prevTab/nextTab to alt-p/-n in settings.json)
+*sc1b::Send, !n ; (map prevTab/nextTab to alt-p/-n in settings.json)
 ; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +!a
 *sc1f::Send, +!s
@@ -466,110 +445,147 @@ FocusSHAppItem(filename, flags = 0, wnd = 0) {
 *sc148::Send, +!{Up}
 *sc150::Send, +!{Down}
 
-#if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES")
-    and (GetKeyState("LWin", "P") or GetKeyState("RWin", "P"))
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Alt", "P")
-    and !GetKeyState("Shift", "P")
+; .........................................................................}}}
 
-; Delete word with Win-h
+#if (WinActive("ahk_exe WindowsTerminal.exe") or WinActive("ahk_exe nvim-qt.exe")) and modifiers() == mod_opt
+*f1::MsgBox, Backspace ; .................................................{{{1
+
+; Delete word with Opt-h
 *sc24::Send, !{Backspace} ; ^{Backspace} doesn't work neither in WindowsTerminal
                           ; nor in nvim-qt.
 
-; Quick-Launcher .........................................................{{{1
-#if GetKeyState("RAlt", "P")
-    and !GetKeyState("Shift", "P")
+; .........................................................................}}}
 
-; Open web browser with RAlt-o
-*sc1f::launch(WEB_BROWSER_WIN, WEB_BROWSER_RUN)
+#if GetKeyState("RAlt", "P") and !GetKeyState("Shift", "P")
+*f1::MsgBox, Quick Launcher ; ............................................{{{1
 
-; Open terminal with RAlt-t
-*sc25::launch(TERMINAL_WIN, TERMINAL_RUN)
+; §  1  2  3  4  5  6  7  8  9  0  -  =
+*sc29::Return
+*sc02::Return
+*sc03::Return
+*sc04::Return
+*sc05::Return
+*sc06::Return
+*sc07::Return
+*sc08::Return
+*sc09::Return
+*sc0a::Return
+*sc0b::Return
+*sc0c::Return
+*sc0d::Return
+; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Return
+*sc11::Return
+*sc12::Return
+*sc13::LaunchExplorer()
+*sc14::Return
+*sc15::Return
+*sc16::Launch(CODE_WIN, CODE_RUN)
+*sc17::Send, #{Tab} ; Open fugly Task View with RCmd-c
+*sc18::Return
+*sc19::Return
+*sc1a::Return
+*sc1b::Return
+; a  s  d  f  g  h  j  k  l  ;  '  \
+*sc1e::Return
+*sc1f::Launch(WEB_BROWSER_WIN, WEB_BROWSER_RUN)
+*sc20::Launch(EDITOR_WIN, EDITOR_RUN)
+*sc21::Return
+*sc22::Return
+*sc23::Launch(DOCSETS_WIN, DOCSETS_RUN)
+*sc24::Return
+*sc25::Launch(TERMINAL_WIN, TERMINAL_RUN)
+*sc26::Return
+*sc27::Return
+*sc28::Return
+*sc2b::Return
+; `  z  x  c  v  b  n  m  ,  .  /
+*sc56::Return
+*sc2c::Return
+*sc2d::Return
+*sc2e::Return
+*sc2f::Return
+*sc30::Return
+*sc31::Return
+*sc32::Launch(MAIL_WIN, MAIL_RUN)
+*sc33::Send, ^,
+*sc34::Return
+*sc35::Return
 
-; Open editor with RAlt-e
-*sc20::launch(EDITOR_WIN, EDITOR_RUN)
+; .........................................................................}}}
 
-; Open mail with RAlt-m
-*sc32::launch(MAIL_WIN, MAIL_RUN)
+#if GetKeyState("RAlt", "P") and GetKeyState("Shift", "P")
+*f1::MsgBox, Quick Launcher (Shift) ; ....................................{{{1
 
-; Open docsets with RAlt-d
-*sc23::launch(DOCSETS_WIN, DOCSETS_RUN)
+; Open task manager with RCmd-Shift-a
+*sc1e::Launch(TASK_MANAGER_WIN, TASK_MANAGER_RUN)
 
-; Open explorer with RAlt-p
-*sc13::
-    launch(EXPLORER_WIN, EXPLORER_RUN)
-    ControlFocus, %EXPLORER_CONTENT%, %EXPLORER_WIN%
-    Return
+; Open git gui with RCmd-Shift-g
+*sc16::Launch(GIT_GUI_WIN, GIT_GUI_RUN)
 
-; Open fugly Task View with RAlt-c
-*sc17::Send, #{Tab}
+; .........................................................................}}}
 
-#if GetKeyState("RAlt", "P")
-    and GetKeyState("LShift", "P")
+#if modifiers() == mod_ctrl | mod_opt
+*f1::MsgBox, Spectacle-like shortcuts (Ctrl+Opt) ; .......................{{{1
 
-; Open task manager with RAlt-Shift-a
-*sc1e::launch(TASK_MANAGER_WIN, TASK_MANAGER_RUN)
+; Switch to next virtual desktop with Ctrl-Opt-l.
+*sc19::Send, ^#{Right}
 
-; Open git gui with RAlt-Shift-g
-*sc16::launch(GIT_GUI_WIN, GIT_GUI_RUN)
+; Switch to previous virtual desktop with Ctrl-Opt-h.
+*sc24::Send, ^#{Left}
 
-launch(win, prog) {
-    if WinActive(win) {
-        ;WinMinimize ; Do nothing instead
-    } else if WinExist(win) {
-        WinActivate
-        ControlFocus, , win
-    } else {
-        Run, %prog%
-    }
-}
-
-; Spectacle-like shortcuts ...............................................{{{1
-#if (GetKeyState("LWin", "P") or GetKeyState("RWin", "P"))
-    and (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Alt", "P")
-    and !GetKeyState("Shift", "P")
-
-; Move to left monitor ([).
+; Move to left monitor with Ctrl-Opt-[.
 *sc1a::Send, #+{Left}
 
-; Move to right monitor (]).
+; Move to right monitor with Ctrl-Opt-].
 *sc1b::Send, #+{Right}
 
-; Make window bigger (+).
+; Make window bigger with Ctrl-Opt-+.
 *sc0d::
     delta := 20
     WinGetPos, x, y, width, height, A
     WinMove, A, , x - delta, y - delta, width + delta * 2, height + delta * 2
     Return
 
-; Make window smaller (-).
+; Make window smaller with Ctrl-Opt--.
 *sc0c::
     delta := -20
     WinGetPos, x, y, width, height, A
     WinMove, A, , x - delta, y - delta, width + delta * 2, height + delta * 2
     Return
 
-; Restore window (Backspace).
+; Restore window with Ctrl-Opt-Backspace.
 *sc0e::Send, !{Space}W
 
-; Maximize window (f).
+; Maximize window with Ctrl-Opt-f.
 *sc15::WinMaximize A
 
-; Pin window to the left side (().
+; Pin window to the left side with Ctrl-Opt-(.
 *sc0a::Send, #{Left}
 
-; Pin window to the right side ()).
+; Pin window to the right side with Ctrl-Opt-).
 *sc0b::Send, #{Right}
 
-; Center window (c).
+; Pin window to the top side with Ctrl-Opt-j.
+*sc2e::Send, #{Up}
+
+; Pin window to the bottom side with Ctrl-Opt-k.
+*sc2f::Send, #{Down}
+
+; Center window with Ctrl-Opt-c.
 *sc17::
-    wnd := WinExist("A")
+    hwnd := WinExist("A")
     WinGetPos, , , width, height
     VarSetCapacity(info, 10 * 4)
     NumPut(10 * 4, info) ; cbSize, rcMonitor, rcWork, dwFlags
-    monitor := DllCall("MonitorFromWindow", "uint", wnd, "uint", 0x2)
-    DllCall("GetMonitorInfo", "uint", monitor, "uint", &info)
+    monitor := DllCall("MonitorFromWindow"
+        , "UInt", hwnd
+        , "UInt", 0x2
+        , "Int")
+    DllCall("GetMonitorInfo"
+        , "UInt", monitor
+        , "UInt", &info
+        , "Int")
     rcWorkLeft   := NumGet(info, 5 * 4, "Int")
     rcWorkTop    := NumGet(info, 6 * 4, "Int")
     rcWorkRight  := NumGet(info, 7 * 4, "Int")
@@ -579,10 +595,10 @@ launch(win, prog) {
     WinMove, A, , x, y
     Return
 
-; Numpad .................................................................{{{1
+; .........................................................................}}}
 
-#if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and GetKeyState("LAlt", "P")
+#if modifiers() == mod_ctrl | mod_cmd
+*f1::msgbox, Numpad (Cmd+Ctrl) ; .........................................{{{1
 
 *sc09::Send, 7
 *sc0a::Send, 8
@@ -604,12 +620,13 @@ launch(win, prog) {
 *sc34::Send, .
 *sc35::Send, /
 
-; Qwerty ⌘ Cmd-layer with Alt ............................................{{{1
+; Open emoji list with Cmd-Ctrl-Space
+*sc39::Send, #.
 
-; Alt -> Ctrl
-#if GetKeyState("Alt", "P")
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Shift", "P")
+; .........................................................................}}}
+
+#if modifiers() == mod_cmd
+*f1::MsgBox, Cmd ; .......................................................{{{1
 
 *sc0f::
     lalt_down := true
@@ -671,21 +688,21 @@ launch(win, prog) {
 *sc35::Send, ^/
 ; Special
 *sc0e::Send, ^{Backspace}
-vk01::Send, ^{LButton}        ; NOTE: using * breaks Alt-Tab.
+vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
 *WheelUp::Send, ^{WheelUp}
 *WheelDown::Send, ^{WheelDown}
 
-; Tip: Use PowerToys Run, start it as admin, use keyboard hook and remap it to
-; Win-S (#{sc1f}). Don't use !{Space}, there are annoying interactions when
-; trying to remap AltGr-Space as well, also breaks Alt for opening menus.
-*sc39::Send, #{sc1f}
-#if GetKeyState("RAlt", "P")
-    and !GetKeyState("Shift", "P")
+; Spotlight with {LAlt}
 *sc39::Send, #{sc1f}
 
-; Alt -> Ctrl (Shift)
-#if GetKeyState("Alt", "P")
-    and GetKeyState("Shift", "P")
+; Spotlight with {RAlt}
+#if GetKeyState("RAlt", "P") and !GetKeyState("Shift", "P")
+*sc39::Send, #{sc1f}
+
+; .........................................................................}}}
+
+#if modifiers() == mod_cmd | mod_shift
+*f1::MsgBox, Modifiers: Cmd+Shift ; ......................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
@@ -740,41 +757,19 @@ vk01::Send, ^{LButton}        ; NOTE: using * breaks Alt-Tab.
 *sc35::Send, +^/
 ; Special
 *vk01::Send, ^{LButton}
+*F12::PowerOffMonitor()
 
-; Power off monitor
-;  WM_SYSCOMMAND   := 0x0112
-;  SC_MONITORPOWER := 0xf170
-;  SHUT_OFF        := 2
-*F12::SendMessage, 0x0112, 0xf170, 2, , Program Manager
-
-; Switch between an app's windows
-SwitchToNextWindow(hwnd = 0) {
-    if !hwnd {
-        hwnd := WinExist("A")
-    }
-    WinGetClass, winclass, ahk_id %hwnd%
-    WinGet, procname, ProcessName, ahk_id %hwnd%
-    WinGet, windows, List, ahk_class %winclass%
-    i := windows + 1
-    loop {
-        if (--i = 0) {
-            break
-        }
-        window := windows%i%
-        WinGet, tmp, ProcessName, ahk_id %window%
-        if (tmp = procname) {
-            WinActivate, ahk_id %window%
-            break
-        }
-    }
-    return
+PowerOffMonitor() {
+    WM_SYSCOMMAND   := 0x0112
+    SC_MONITORPOWER := 0xf170
+    SHUT_OFF        := 2
+    SendMessage, %WM_SYSCOMMAND%, %SC_MONITORPOWER%, %SHUT_OFF%, , Program Manager
 }
 
-; Global terminal-like control characters ................................{{{1
-#if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl",  "P"))
-    and !GetKeyState("Shift",  "P")
-    and !GetKeyState("Alt",  "P")
-    and !WinActive("ahk_group CONTROL_CHARS_EXCLUDES")
+; .........................................................................}}}
+
+#if !WinActive("ahk_group CONTROL_CHARS_EXCLUDES") and modifiers() == mod_ctrl
+*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl  ; ........{{{1
 
 *sc31::Send, {Left}
 *sc15::Send, {Right}
@@ -785,10 +780,10 @@ SwitchToNextWindow(hwnd = 0) {
 *sc24::Send, {Backspace}
 *sc23::Send, {Delete}
 
-#if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl",  "P"))
-    and GetKeyState("Shift",  "P")
-    and !GetKeyState("Alt",  "P")
-    and !WinActive("ahk_group CONTROL_CHARS_EXCLUDES")
+; .........................................................................}}}
+
+#if !WinActive("ahk_group CONTROL_CHARS_EXCLUDES") and modifiers() == mod_ctrl | mod_shift
+*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl+Shift ; ...{{{1
 
 *sc31::Send, +{Left}
 *sc15::Send, +{Right}
@@ -797,66 +792,10 @@ SwitchToNextWindow(hwnd = 0) {
 *sc20::Send, +{End}
 *sc1e::Send, +{Home}
 
-; Other macOS-like shortcuts .............................................{{{1
-#if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and GetKeyState("LAlt", "P")
+; .........................................................................}}}
 
-; Open emoji list with Ctrl-Alt-Space
-*sc39::Send, #.
-
-; Disable everything else.
-*sc29::Return
-*sc02::Return
-*sc03::Return
-*sc04::Return
-*sc05::Return
-*sc06::Return
-*sc07::Return
-*sc08::Return
-*sc09::Return
-*sc0a::Return
-*sc0b::Return
-*sc0c::Return
-*sc0d::Return
-*sc10::Return
-*sc11::Return
-*sc12::Return
-*sc13::Return
-*sc14::Return
-*sc16::Return
-*sc18::Return
-*sc19::Return
-*sc1e::Return
-*sc1f::Return
-*sc20::Return
-*sc21::Return
-*sc22::Return
-*sc23::Return
-*sc24::Return
-*sc25::Return
-*sc26::Return
-*sc27::Return
-*sc28::Return
-*sc2b::Return
-*sc56::Return
-*sc2c::Return
-*sc2d::Return
-*sc2e::Return
-*sc2f::Return
-*sc30::Return
-*sc31::Return
-*sc32::Return
-*sc33::Return
-*sc34::Return
-*sc35::Return
-
-; Dvorak-like keyboard layout ............................................{{{1
-
-; WinKey -> ⌥ Option
-#if (GetKeyState("LWin", "P") or GetKeyState("RWin", "P") or GetKeyState("sc137", "P") or GetKeyState("sc15d", "P"))
-    and !(GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
-    and !GetKeyState("Alt", "P")
-    and !GetKeyState("Shift", "P")
+#if modifiers() == mod_opt
+*f1::MsgBox, Modifiers: Opt ; ............................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Send, !{sc29}
@@ -914,70 +853,128 @@ SwitchToNextWindow(hwnd = 0) {
 *sc1c::Send, !{Enter}
 *vk01::Send, !{LButton}
 
-; WinKey -> ⌥ Option (Shift)
-#if (GetKeyState("LWin", "P") or GetKeyState("RWin", "P"))
-    and GetKeyState("Shift", "P")
-    and !GetKeyState("Alt", "P")
+; .........................................................................}}}
+
+#if modifiers() == mod_shift | mod_opt
+*f1::MsgBox, Modifiers: Shift+Opt ; ......................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::Return
-*sc02::Return
-*sc03::Return
-*sc04::Return
-*sc05::Return
-*sc06::Return
-*sc07::Return
-*sc08::Return
-*sc09::Return
-*sc0a::Return
-*sc0b::Return
-*sc0c::Return
-*sc0d::Return
+*sc29::Send, +!{sc29}
+*sc02::Send, +!1
+*sc03::Send, +!2
+*sc04::Send, +!3
+*sc05::Send, +!4
+*sc06::Send, +!5
+*sc07::Send, +!6
+*sc08::Send, +!7
+*sc09::Send, +!8
+*sc0a::Send, +!9
+*sc0b::Send, +!0
+*sc0c::Send, +!{sc0c}
+*sc0d::Send, +!{sc0d}
 ; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Return
-*sc11::Return
-*sc12::Return
-*sc13::Return
-*sc14::Return
+*sc10::Send, +!;
+*sc11::Send, +!,
+*sc12::Send, +!.
+*sc13::Send, +!p
+*sc14::Send, +!y
 *sc15::Send, +^{Right}
-*sc16::Return
-*sc17::Return
-*sc18::Return
-*sc19::Return
-*sc1a::Return
-*sc1b::Return
+*sc16::Send, +!g
+*sc17::Send, +!c
+*sc18::Send, +!r
+*sc19::Send, +!l
+*sc1a::Send, +![
+*sc1b::Send, +!]
 ; a  s  d  f  g  h  j  k  l  ;  '  \
-*sc1e::Return
-*sc1f::Return
-*sc20::Return
-*sc21::Return
-*sc22::Return
-*sc23::Return
-*sc24::Return
-*sc25::Return
-*sc26::Return
-*sc27::Return
-*sc28::Return
-*sc2b::Return
+*sc1e::Send, Ä
+*sc1f::Send, Ö
+*sc20::Send, +!e
+*sc21::Send, +!i
+*sc22::Send, Ü
+*sc23::Send, +!d
+*sc24::Send, +!h
+*sc25::Send, +!t
+*sc26::Send, +!n
+*sc27::Send, +!s
+*sc28::Send, +!'
+*sc2b::Send, +!\
 ; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Return
-*sc2c::Return
-*sc2d::Return
-*sc2e::Return
-*sc2f::Return
-*sc30::Return
+;*sc56::Send, +!{sc0d}
+*sc2c::Send, +!{sc2c}
+*sc2d::Send, +!q
+*sc2e::Send, +!j
+*sc2f::Send, +!k
+*sc30::Send, +!x
 *sc31::Send, +^{Left}
-*sc32::Return
-*sc33::Return
-*sc34::Return
-*sc35::Return
+*sc32::Send, +!m
+*sc33::Send, +!w
+*sc34::Send, +!v
+*sc35::Send, +!z
 ; Special
 *sc1c::Send, +!{Enter}
 *vk01::Send, +!{LButton}
 
-; Ctrl -> Ctrl
-#if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl",  "P"))
-    and !GetKeyState("Alt",  "P")
+; .........................................................................}}}
+
+#if modifiers() == mod_cmd | mod_opt
+*f1::MsgBox, Modifiers: Cmd+Opt ; ........................................{{{1
+
+; §  1  2  3  4  5  6  7  8  9  0  -  =
+*sc29::Send, ^!{sc29}
+*sc02::Send, ^!1
+*sc03::Send, ^!2
+*sc04::Send, ^!3
+*sc05::Send, ^!4
+*sc06::Send, ^!5
+*sc07::Send, ^!6
+*sc08::Send, ^!7
+*sc09::Send, ^!8
+*sc0a::Send, ^!9
+*sc0b::Send, ^!0
+;*sc0c::Send, ^!{sc0c}
+;*sc0d::Send, ^!{sc0d}
+; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Send, ^!q
+*sc11::Send, ^!w
+*sc12::Send, ^!e
+*sc13::Send, ^!r
+*sc14::Send, ^!t
+*sc15::Send, ^!y
+*sc16::Send, ^!u
+*sc17::Send, ^!i
+*sc18::Send, ^!o
+*sc19::Send, ^!p
+*sc1a::Send, ^![
+*sc1b::Send, ^!]
+; a  s  d  f  g  h  j  k  l  ;  '  \
+*sc1e::Send, ^!a
+*sc1f::Send, ^!s
+*sc20::Send, ^!d
+*sc21::Send, ^!f
+*sc22::Send, ^!g
+*sc23::Send, ^!h
+*sc24::Send, ^!j
+*sc25::Send, ^!k
+*sc26::Send, ^!l
+*sc27::Send, ^!;
+*sc28::Send, ^!'
+*sc2b::Send, ^!\
+; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::Send, !{sc0d}
+*sc2c::Send, ^!z
+*sc2d::Send, ^!x
+*sc2e::Send, ^!c
+*sc2f::Send, ^!v
+*sc30::Send, ^!b
+*sc31::Send, ^!n
+*sc32::Send, ^!m
+*sc33::Send, ^!,
+*sc34::Send, ^!.
+*sc35::Send, ^!/
+; .........................................................................}}}
+
+#if modifiers() == mod_ctrl
+*f1::MsgBox, Modifiers: Ctrl ; ...........................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
@@ -1017,7 +1014,7 @@ SwitchToNextWindow(hwnd = 0) {
 *sc25::Send, ^t
 *sc26::Send, ^n
 *sc27::Send, ^s
-*sc28::Return
+*sc28::Send, ^{vkbc}                 ; Map to C-_
 *sc2b::Send, ^{vkbf}                 ; Map to C-\
 ; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
@@ -1032,11 +1029,13 @@ SwitchToNextWindow(hwnd = 0) {
 *sc34::Send, ^v
 *sc35::Send, ^z
 ; Special
-;*sc39::Send, ^{Space}               ; Remap C-SPC for Hunt-and-Peck to Alt-;
-*sc39::Send, !{vk00ba}               ; instead, because its hotkey is hardcoded.
+;*sc39::Send, ^{Space}               ; Remap {Ctrl-Space} to {Alt-;} instead
+*sc39::Send, !{vk00ba}               ; because Hunt-and-Peck's hotkey is hardcoded.
 
-; Regular (Shift)
-#if GetKeyState("Shift")
+; .........................................................................}}}
+
+#if modifiers() == mod_shift
+*f1::MsgBox, Modifiers: Shift ; ..........................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
@@ -1095,8 +1094,10 @@ SwitchToNextWindow(hwnd = 0) {
 *WheelUp::Send, +{WheelUp}
 *WheelDown::Send, +{WheelDown}
 
-; Regular
+; .........................................................................}}}
+
 #if
+*f1::MsgBox, No modifiers ; ..............................................{{{1
 
 ; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
@@ -1151,7 +1152,299 @@ SwitchToNextWindow(hwnd = 0) {
 *sc34::Send, v
 *sc35::Send, z
 ; Special
-*F12::Send, #a
 *sc1c::Send, {Enter}
 *sc39::Send, {Space}
+*F12::Send, #a
+
+; .........................................................................}}}
+
+; Launch .................................................................{{{1
+
+Launch(win, prog, forceSingleInstance := true, runAsAdmin := false) {
+    if forceSingleInstance {
+        if WinActive(win) {
+            ;WinMinimize ; Do nothing instead
+            Return
+        } else if WinExist(win) {
+            WinActivate
+            ControlFocus, , win
+            Return
+        }
+    }
+    ShellRun(prog, , , runAsAdmin ? "runas" : "")
+}
+
+LaunchExplorer() {
+    global
+    Launch(EXPLORER_WIN, EXPLORER_RUN)
+    ControlFocus, %EXPLORER_CONTENT%, %EXPLORER_WIN%
+}
+
+; .........................................................................}}}
+
+; CmdRet .................................................................{{{1
+
+; Taken from https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84266&sid=eff012cadb7a851b2c18f5f03b68408f
+CmdRet(exec, callback := "", encoding := "CP0") {
+    Static HANDLE_FLAG_INHERIT  := 0x00000001
+    Static STARTF_USESTDHANDLES := 0x100
+    Static CREATE_NO_WINDOW     := 0x08000000
+
+    hPipeRead  := ""
+    hPipeWrite := ""
+    output     := ""
+
+    DllCall("CreatePipe"
+        , "PtrP", hPipeRead
+        , "PtrP", hPipeWrite
+        , "Ptr", 0
+        , "UInt", 0
+        , "Int")
+    DllCall("SetHandleInformation"
+        , "Ptr", hPipeWrite
+        , "UInt", HANDLE_FLAG_INHERIT
+        , "UInt", HANDLE_FLAG_INHERIT
+        , "Int")
+    siSize := A_PtrSize*4 + 4*8 + A_PtrSize*5
+    VarSetCapacity(STARTUPINFO, siSize, 0)
+    NumPut(siSize, STARTUPINFO, 0)
+    NumPut(STARTF_USESTDHANDLES, STARTUPINFO, A_PtrSize*4 + 4*7)
+    NumPut(hPipeWrite, STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*3)
+    NumPut(hPipeWrite, STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*4)
+
+    VarSetCapacity(PROCESS_INFORMATION, A_PtrSize*2 + 4*2, 0)
+    ret := DllCall("CreateProcess"
+        , "Ptr", 0
+        , "Str", exec
+        , "Ptr", 0
+        , "Ptr", 0
+        , "UInt", true
+        , "UInt", CREATE_NO_WINDOW
+        , "Ptr", 0
+        , "Ptr", 0
+        , "Ptr", &STARTUPINFO
+        , "Ptr", &PROCESS_INFORMATION
+        , "Int")
+    if !ret {
+        DllCall("CloseHandle"
+            , "Ptr", hPipeRead
+            , "Int")
+        DllCall("CloseHandle"
+            , "Ptr", hPipeWrite
+            , "Int")
+        throw Exception("CreateProcess is failed")
+    }
+    DllCall("CloseHandle"
+        , "Ptr", hPipeWrite
+        , "Int")
+    bufsize := 4096
+    VarSetCapacity(buf, bufsize)
+    read := 0
+    while DllCall("ReadFile"
+        , "Ptr", hPipeRead
+        , "Ptr", &buf
+        , "UInt", bufsize
+        , "UIntP", read
+        , "UInt", 0
+        , "Int") {
+        text := StrGet(&buf, read, encoding)
+        (callback && callback.Call(text))
+        output .= text
+    }
+    hProcess := NumGet(PROCESS_INFORMATION, 0)
+    hThread := NumGet(PROCESS_INFORMATION, A_PtrSize)
+    DllCall("CloseHandle"
+        , "Ptr", hProcess
+        , "Int")
+    DllCall("CloseHandle"
+        , "Ptr", hThread
+        , "Int")
+    DllCall("CloseHandle"
+        , "Ptr", hPipeRead
+        , "Int")
+    Return output
+}
+
+; .........................................................................}}}
+
+; ShellRun ...............................................................{{{1
+
+; Taken from https://github.com/Lexikos/AutoHotkey-Release/blob/master/installer/source/Lib/ShellRun.ahk
+; Also see https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
+; and https://devblogs.microsoft.com/oldnewthing/20130318-00/?p=4933
+; Operation can be one of {explorer find open print runas}
+
+SW_HIDE            := 0
+SW_SHOWNORMAL      := 1
+SW_SHOWMINIMIZED   := 2
+SW_SHOWMAXIMIZED   := 3
+SW_SHOWNOACTIVATE  := 4
+SW_SHOW            := 5
+SW_MINIMIZE        := 6
+SW_SHOWMINNOACTIVE := 7
+SW_SHOWNA          := 8
+SW_RESTORE         := 9
+SW_SHOWDEFAULT     := 10
+SW_FORCEMINIMIZE   := 11
+
+ShellRun(file, params := "", dir := "", operation := "open", show := 1) {
+    SWFO_NEEDDISPATCH   := 0x1
+    SWFO_INCLUDEPENDING := 0x2
+    SWFO_COOKIEPASSED   := 0x4
+
+    SWC_EXPLORER := 0,
+    SWC_BROWSER  := 0x1
+    SWC_3RDPARTY := 0x2
+    SWC_CALLBACK := 0x4
+    SWC_DESKTOP  := 0x8
+
+    VT_NULL    := 0x0001
+    VT_I2      := 0x0002
+    VT_I4      := 0x0003
+    VT_INT     := 0x0016
+    VT_BYREF   := 0x4000
+    VT_INT_PTR := 0x0025
+
+    SID_STopLevelBrowser := "{4C96BE40-915C-11CF-99D3-00AA004AE837}"
+    IID_IShellBrowser    := "{000214E2-0000-0000-C000-000000000046}"
+
+    windows := ComObjCreate("Shell.Application").Windows
+    VarSetCapacity(hwnd, A_PtrSize, 0)
+    hwndRef := ComObj(VT_BYREF | VT_I4, &hwnd)
+    desktop := windows.FindWindowSW(0, "", SWC_DESKTOP, hwndRef, SWFO_NEEDDISPATCH)
+
+    ; Retrieve top-level browser object.
+    if ptlb := ComObjQuery(desktop
+        , SID_STopLevelBrowser
+        , IID_IShellBrowser) {
+        ; IShellBrowser.QueryActiveShellView -> IShellView
+        psv := 0
+        res := DllCall(NumGet(NumGet(ptlb + 0) + 15 * A_PtrSize)
+            , "Ptr", ptlb
+            , "PtrP", psv
+            , "Int")
+        if (res == 0) {
+            ; Define IID_IDispatch.
+            VarSetCapacity(IID_IDispatch, 16)
+            NumPut(0x46000000000000C0, NumPut(0x20400, IID_IDispatch, "Int64"), "Int64")
+
+            ; IShellView.GetItemObject -> IDispatch (object which implements IShellFolderViewDual)
+            pdisp := 0
+            DllCall(NumGet(NumGet(psv+0)+15*A_PtrSize)
+                , "Ptr", psv
+                , "UInt", 0
+                , "Ptr", &IID_IDispatch
+                , "PtrP", pdisp
+                , "Int")
+
+            ; Get Shell object.
+            shell := ComObj(9, pdisp, 1).Application
+
+            ; IShellDispatch2.ShellExecute
+            shell.ShellExecute(file, params, dir, operation, show)
+
+            ObjRelease(psv)
+        }
+        ObjRelease(ptlb)
+    }
+}
+
+; .........................................................................}}}
+
+; Explorer-related macros ................................................{{{1
+
+; Get explorer's current folder
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
+; also, explore COM objects in PowerShell with:
+;   $w = (New-Object -ComObject Shell.Application).Windows(0)
+GetSHAppFolderPath(hwnd := 0) {
+    if (!hwnd) {
+        hwnd := WinExist("A")
+    }
+    res := ""
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == hwnd) {
+            res := window.Document.Folder.Self.Path
+            Break
+        }
+    }
+    ObjRelease(com)
+    Return res
+}
+
+; Get an explorer-window's selected filenames
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
+; and https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selecteditems
+GetSHAppSelectionPaths(hwnd := 0) {
+    if (!hwnd) {
+        hwnd := WinExist("A")
+    }
+    res := ""
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == hwnd) {
+            for item in window.Document.SelectedItems {
+                res := res . ";" . item.Path
+            }
+            res := Substr(res, 2)
+            Break
+        }
+    }
+    ObjRelease(com)
+    Return res
+}
+
+; Select a file within an explorer-window
+; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview-selectitem
+; and https://docs.microsoft.com/en-us/windows/win32/shell/folderitems
+FocusSHAppItem(filename, flags := 0, hwnd := 0) {
+    if (!flags) {
+        flags := 1 + 2 + 4 + 8 + 16
+    }
+    if (!hwnd) {
+        hwnd := WinExist("A")
+    }
+    res := false
+    com := ComObjCreate("Shell.Application")
+    for window in com.Windows {
+        if (window && window.hwnd == hwnd) {
+            item := window.Document.Folder.ParseName(filename)
+            window.Document.SelectItem(item, flags)
+            res := true
+            Break
+        }
+    }
+    ObjRelease(com)
+    Return res
+}
+
+; .........................................................................}}}
+
+; SwitchToNextWindow .....................................................{{{1
+
+; Switch between an app's windows
+SwitchToNextWindow(hwnd := 0) {
+    if !hwnd {
+        hwnd := WinExist("A")
+    }
+    WinGetClass, winclass, ahk_id %hwnd%
+    WinGet, procname, ProcessName, ahk_id %hwnd%
+    WinGet, windows, List, ahk_class %winclass%
+    i := windows + 1
+    Loop {
+        if (--i == 0) {
+            Break
+        }
+        window := windows%i%
+        WinGet, tmp, ProcessName, ahk_id %window%
+        if (tmp == procname) {
+            WinActivate, ahk_id %window%
+            Break
+        }
+    }
+    Return
+}
+
+; .........................................................................}}}
 
