@@ -584,22 +584,23 @@ launch(win, prog) {
 #if (GetKeyState("Capslock", "P") or GetKeyState("Ctrl", "P"))
     and GetKeyState("LAlt", "P")
 
-*sc09::Send, 7
-*sc0a::Send, 8
-*sc0b::Send, 9
-*sc16::Send, 4
-*sc17::Send, 5
-*sc18::Send, 6
-*sc24::Send, 1
-*sc25::Send, 2
-*sc26::Send, 3
-*sc32::Send, 0
-*sc33::Send, ,
-*sc34::Send, .
-*sc0c::Send, *
-*sc19::Send, {+}
-*sc27::Send, -
-*sc35::Send, /
+*sc09::Send, *
+*sc0a::Send, /
+*sc0b::Send, {+}
+*sc0c::Send, -
+
+*sc16::Send, 7
+*sc17::Send, 8
+*sc18::Send, 9
+
+*sc24::Send, 4
+*sc25::Send, 5
+*sc26::Send, 6
+*sc26::Send, 0
+
+*sc32::Send, 1
+*sc33::Send, 2
+*sc34::Send, 3
 
 ; Qwerty ⌘ Cmd-layer with Alt ............................................{{{1
 
