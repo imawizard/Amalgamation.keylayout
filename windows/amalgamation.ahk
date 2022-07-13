@@ -35,41 +35,33 @@ EnvGet, HOME, HOME
 EnvGet, HOMEDRIVE, HOMEDRIVE
 
 ; Apps to launch
-EXPLORER_WIN     := "ahk_class CabinetWClass"
-EXPLORER_RUN     := "explorer.exe"
-EDITOR_WIN       := "ahk_exe nvim-qt.exe"
-EDITOR_RUN       := HOME . "scoop\apps\neovim\current\bin\nvim-qt.exe"
-CODE_WIN         := "ahk_exe Code.exe"
-CODE_RUN         := HOME . "AppData\Local\Programs\Microsoft VS Code\Code.exe"
-TERMINAL_WIN     := "ahk_exe WindowsTerminal.exe"
-TERMINAL_RUN     := "wt.exe"
-WEB_BROWSER_WIN  := "ahk_exe opera.exe"
-WEB_BROWSER_RUN  := HOMEDRIVE . "Program Files\Opera\launcher.exe"
-TASK_MANAGER_WIN := "ahk_exe ProcessHacker.exe"
-TASK_MANAGER_RUN := "taskmgr.exe"
-GIT_GUI_WIN      := "ahk_exe gitextensions.exe"
-GIT_GUI_RUN      := HOME . "scoop\apps\gitextensions\current\GitExtensions.exe"
-MAIL_WIN         := "ahk_exe outlook.exe"
-MAIL_RUN         := "outlook.exe"
-DOCSETS_WIN      := "ahk_exe zeal.exe"
-DOCSETS_RUN      := HOME . "scoop\apps\zeal\current\zeal.exe"
+Global EXPLORER_WIN     := "ahk_class CabinetWClass"
+Global EXPLORER_RUN     := "explorer.exe"
+Global EDITOR_WIN       := "ahk_exe nvim-qt.exe"
+Global EDITOR_RUN       := HOME . "scoop\apps\neovim\current\bin\nvim-qt.exe"
+Global CODE_WIN         := "ahk_exe Code.exe"
+Global CODE_RUN         := HOME . "AppData\Local\Programs\Microsoft VS Code\Code.exe"
+Global TERMINAL_WIN     := "ahk_exe WindowsTerminal.exe"
+Global TERMINAL_RUN     := "wt.exe"
+Global WEB_BROWSER_WIN  := "ahk_exe opera.exe"
+Global WEB_BROWSER_RUN  := HOMEDRIVE . "Program Files\Opera\launcher.exe"
+Global TASK_MANAGER_WIN := "ahk_exe ProcessHacker.exe"
+Global TASK_MANAGER_RUN := "taskmgr.exe"
+Global GIT_GUI_WIN      := "ahk_exe gitextensions.exe"
+Global GIT_GUI_RUN      := HOME . "scoop\apps\gitextensions\current\GitExtensions.exe"
+Global MAIL_WIN         := "ahk_exe outlook.exe"
+Global MAIL_RUN         := "outlook.exe"
+Global DOCSETS_WIN      := "ahk_exe zeal.exe"
+Global DOCSETS_RUN      := HOME . "scoop\apps\zeal\current\zeal.exe"
 
-; Explorer window controls
-EXPLORER_CONTENT := "DirectUIHWND2"
-EXPLORER_SIDEBAR := "SysTreeView321"
-EXPLORER_DESKTOP := "SysListView321"
-
-mod_none   := 0
-mod_cmd    := 1 << 0
-mod_shift  := 1 << 1
-mod_ctrl   := 1 << 2
-mod_opt    := 1 << 3
+Global mod_none  := 0
+Global mod_cmd   := 1 << 0
+Global mod_shift := 1 << 1
+Global mod_ctrl  := 1 << 2
+Global mod_opt   := 1 << 3
 
 modifiers() {
-    global
-
-    local flags := mod_none
-
+    flags := mod_none
     if GetKeyState("LAlt", "P") {
         flags := flags | mod_cmd
     }
@@ -86,7 +78,6 @@ modifiers() {
     if GetKeyState("sc137", "P") {
         flags := flags | mod_opt
     }
-
     Return flags
 }
 
@@ -168,269 +159,308 @@ Pause::
 *sc15d::Return
 
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_none
-*f1::MsgBox, Explorer, No modifiers ; ....................................{{{1
+;*f1::MsgBox, Explorer, No modifiers ; ...................................{{{1
 
-; Rename with Return
-*sc1c::
-    ControlGetFocus, c
-    if (c == EXPLORER_CONTENT
-     || c == EXPLORER_DESKTOP
-     || c == EXPLORER_SIDEBAR) {
-        Send, {F2}
-    } else {
-        Send, {Enter}
-    }
-    Return
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+;*sc14::
+;*sc15::
+;*sc16::
+;*sc17::
+;*sc18::
+;*sc19::
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
+;*sc24::
+;*sc25::
+;*sc26::
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+;*sc31::
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
+;; Special
+*sc1c::ExplorerRename()
 
 ; .........................................................................}}}
 
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_ctrl
-*f1::MsgBox, Explorer, Modifiers: Ctrl ; .................................{{{1
+;*f1::MsgBox, Explorer, Modifiers: Ctrl ; ................................{{{1
 
-; Go one level up with Ctrl-b
-*sc31::
-    ControlGetFocus, c
-    if (c == EXPLORER_SIDEBAR) {
-        Send, {Left}{Enter}
-    } else if (c == EXPLORER_CONTENT) {
-        Send, !{Up}
-    } else {
-        Send, {Left}
-    }
-    Return
-
-; Go one level down with Ctrl-f
-*sc15::
-    ControlGetFocus, c
-    if (c == EXPLORER_SIDEBAR) {
-        Send, {Right}{Enter}
-    } else if (c == EXPLORER_CONTENT) {
-        Send, {Enter}
-    } else {
-        Send, {Right}
-    }
-    Return
-
-; Previous item with Ctrl-p
-*sc13::
-    ControlGetFocus, c
-    if (c == EXPLORER_SIDEBAR) {
-        Send, {Up}{Enter}
-    } else if (c == EXPLORER_CONTENT) {
-        Send, {Up}
-    } else {
-        Send, {Up}
-    }
-    Return
-
-; Next item with Ctrl-n
-*sc26::
-    ControlGetFocus, c
-    if (c == EXPLORER_SIDEBAR) {
-        Send, {Down}{Enter}
-    } else if (c == EXPLORER_CONTENT) {
-        Send, {Down}
-    } else {
-        Send, {Down}
-    }
-    Return
-
-; Open selected file in editor with Ctrl-v
-*sc34::
-    filepath := ""
-    ControlGetFocus, c
-    if (c == EXPLORER_DESKTOP) {
-        filepath := GetDesktopSelectionPaths(c)
-    } else if (c == EXPLORER_CONTENT) {
-        filepath := GetSHAppSelectionPaths()
-    } else if (c == EXPLORER_SIDEBAR) {
-        filepath := GetSHAppFolderPath()
-    }
-    if filepath {
-        Loop, Parse, filepath, `;
-        {
-            Run, %EDITOR_RUN% "%A_LoopField%"
-        }
-    }
-    Return
-
-; Open folder in terminal with Ctrl-z
-*sc35::
-    filepath := ""
-    ControlGetFocus, c
-    if (c == EXPLORER_DESKTOP) {
-        filepath := GetDesktopSelectionPaths(c)
-    } else {
-        filepath := GetSHAppSelectionPaths()
-        if !filepath {
-            filepath := GetSHAppFolderPath()
-        }
-    }
-    if filepath {
-        Loop, Parse, filepath, `;
-        {
-            if InStr(FileExist(A_LoopField), "D") {
-                ShellRun(TERMINAL_RUN, "-d """ . A_LoopField . """")
-            } else if InStr(FileExist(A_LoopField), "A") {
-                SplitPath, % A_LoopField, , dirname
-                ShellRun(TERMINAL_RUN, "-d """ . dirname . """")
-            }
-        }
-    }
-    Return
-
-; Open folder in git gui with Ctrl-g
-*sc16::
-    filepath := ""
-    ControlGetFocus, c
-    if (c == EXPLORER_DESKTOP) {
-        filepath := GetDesktopSelectionPaths(c)
-    } else {
-        filepath := GetSHAppSelectionPaths()
-        if !filepath {
-            filepath := GetSHAppFolderPath()
-        }
-    }
-    if filepath {
-        Loop, Parse, filepath, `;
-        {
-            if InStr(FileExist(A_LoopField), "D") {
-                ShellRun(GIT_GUI_RUN, "browse """ . A_LoopField . """")
-            } else if InStr(FileExist(A_LoopField), "A") {
-                SplitPath, % A_LoopField, , dirname
-                ShellRun(GIT_GUI_RUN, "browse """ . dirname . """")
-            }
-        }
-    }
-    Return
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+*sc13::ExplorerPreviousItem()
+;*sc14::
+*sc15::ExplorerOneLevelDown()
+*sc16::ExplorerOpenInGitGui()
+;*sc17::
+;*sc18::
+;*sc19::
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
+;*sc24::
+;*sc25::
+*sc26::ExplorerNextItem()
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+*sc31::ExplorerOneLevelUp()
+;*sc32::
+;*sc33::
+*sc34::ExplorerOpenInEditor()
+*sc35::ExplorerOpenInTerminal()
 
 ; .........................................................................}}}
 
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd
-*f1::MsgBox, Explorer, Modifiers: Cmd ; ..................................{{{1
+;*f1::MsgBox, Explorer, Modifiers: Cmd ; .................................{{{1
 
-; Open with Cmd-o
-*sc18::Send, {Enter}
-
-; New window (no native tabs yet...) with Cmd-t
-*sc14::Send, ^n
-
-; Delete with Cmd-Backspace
-*sc0e::Send, ^d
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+*sc14::Send, ^n                      ; New window (no native tabs yet...)
+;*sc15::
+;*sc16::
+;*sc17::
+*sc18::Send, {Enter}                 ; Open file
+;*sc19::
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
+;*sc24::
+;*sc25::
+;*sc26::
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+;*sc31::
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
+;; Special
+*sc0e::Send, ^d                      ; Delete file
 
 ; .........................................................................}}}
 
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd | mod_shift
-*f1::MsgBox, Explorer, Modifiers: Cmd+Shift ; ............................{{{1
+;*f1::MsgBox, Explorer, Modifiers: Cmd+Shift ; ...........................{{{1
 
-*sc17:: ; Cmd+Shift+c
-    NavigateSHApp("shell:MyComputerFolder")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc19:: ; Cmd+Shift+l
-    NavigateSHApp("shell:Libraries")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc1e:: ; Cmd+Shift+a
-    NavigateSHApp("shell:AppsFolder")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc1f:: ; Cmd+Shift+o
-    NavigateSHApp("shell:DocumentsLibrary")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc21:: ; Cmd+Shift+i
-    NavigateSHApp("shell:OneDrive")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc22:: ; Cmd+Shift+u
-    NavigateSHApp("shell:Administrative Tools")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc23:: ; Cmd+Shift+d
-    NavigateSHApp("shell:Desktop")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc24:: ; Cmd+Shift+h
-    NavigateSHApp("shell:Profile")
-    Send, {Tab}{Up}{Home}
-    Return
-
-*sc2f:: ; Cmd+Shift+k
-    NavigateSHApp("shell:NetworkPlacesFolder")
-    Send, {Tab}{Up}{Home}
-    Return
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+;*sc14::
+;*sc15::
+;*sc16::
+*sc17::ExplorerNavigate("shell:MyComputerFolder")
+;*sc18::
+*sc19::ExplorerNavigate("shell:Libraries")
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+*sc1e::ExplorerNavigate("shell:AppsFolder")
+*sc1f::ExplorerNavigate("shell:DocumentsLibrary")
+;*sc20::
+*sc21::ExplorerNavigate("shell:OneDrive")
+*sc22::ExplorerNavigate("shell:Administrative Tools")
+*sc23::ExplorerNavigate("shell:Desktop")
+*sc24::ExplorerNavigate("shell:Profile")
+;*sc25::
+;*sc26::
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+*sc2f::ExplorerNavigate("shell:NetworkPlacesFolder")
+;*sc30::
+;*sc31::
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
 
 ; .........................................................................}}}
 
 #if WinActive("ahk_exe explorer.exe") and modifiers() == mod_cmd | mod_opt
-*f1::MsgBox, Explorer, Modifiers: Cmd+Opt ; ..............................{{{1
+;*f1::MsgBox, Explorer, Modifiers: Cmd+Opt ; .............................{{{1
 
-*sc19:: ; Cmd+Opt+l
-    NavigateSHApp("shell:Downloads")
-    Return
-
-; Copy file path with Cmd-Opt-c
-*sc2e::
-    filepath := ""
-    ControlGetFocus, c
-    if (c == EXPLORER_CONTENT) {
-        filepath := GetSHAppSelectionPaths()
-    } else if (c == EXPLORER_SIDEBAR) {
-        filepath := GetSHAppFolderPath()
-    }
-    if filepath {
-        Clipboard := filepath
-    }
-    Return
-
-; Create new text file with Cmd-Opt-n
-*sc31::
-    ControlGetFocus, c
-    if (c == EXPLORER_DESKTOP) {
-        cwd := A_Desktop
-    } else {
-        cwd := GetSHAppFolderPath()
-    }
-    if (!cwd || Substr(cwd, 1, 2) == "::") {
-        Return
-    }
-
-    dest := cwd . "\Untitled"
-    ext := ".txt"
-    n := 1
-    Loop {
-        if (n > 1) {
-            path := dest . n . ext
-        } else {
-            path := dest . ext
-        }
-        if !FileExist(path) {
-            FileOpen(path, "w")
-            SplitPath, path, filename
-            FocusSHAppItem(filename, 1 + 4 + 8 + 16)
-            Return
-        }
-        n++
-    }
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+;*sc14::
+;*sc15::
+;*sc16::
+;*sc17::
+;*sc18::
+*sc19::ExplorerNavigate("shell:Downloads")
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
+;*sc24::
+;*sc25::
+;*sc26::
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+*sc2e::ExplorerCopyFilepath()
+;*sc2f::
+;*sc30::
+*sc31::ExplorerCreateNewTextfile()
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
 
 ; .........................................................................}}}
 
 #if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES") and modifiers() == mod_cmd
-*f1::MsgBox, Mask Cmd ; ..................................................{{{1
+;*f1::MsgBox, Mask Cmd ; .................................................{{{1
 
 ; Don't map {Alt} to {Ctrl}, but to {Ctrl-Shift} so that {Alt} acts as Cmd- and
 ; Capslock as Ctrl-layer. Shortcuts must be remapped in the particular apps,
 ; like ctrl-shift-f for find etc.
 
-;  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
 *sc02::Send, +^1
 *sc03::Send, +^2
 *sc04::Send, +^3
@@ -443,8 +473,8 @@ Pause::
 *sc0b::Send, +^0
 *sc0c::Send, +^-
 *sc0d::Send, +^=
-; q  w  e  r  t  y  u  i  o  p  [  ]
-;*sc10::Send, +^q
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::Send, +^q                    ; Don't shadow Cmd-q
 *sc11::Send, +^w
 *sc12::Send, +^e
 *sc13::Send, +^r
@@ -456,20 +486,21 @@ Pause::
 *sc19::Send, +^p
 *sc1a::Send, +^[
 *sc1b::Send, +^]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +^a
 *sc1f::Send, +^s
 *sc20::Send, +^d
 *sc21::Send, +^f
 *sc22::Send, +^g
-;*sc23::Send, +^h
+;*sc23::Send, +^h                    ; Don't shadow Cmd-h
 *sc24::Send, +^j
 *sc25::Send, +^k
 *sc26::Send, +^l
 *sc27::Send, +^;
 *sc28::Send, +^'
 *sc2b::Send, +^\
-; z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::Send, +^{sc56}               ; Don't shadow Cmd-`
 *sc2c::Send, +^z
 *sc2d::Send, +^x
 *sc2e::Send, +^c
@@ -484,15 +515,16 @@ Pause::
 ; .........................................................................}}}
 
 #if WinActive("ahk_group MASK_CMD_LAYER_INCLUDES") and modifiers() == mod_cmd | mod_shift
-*f1::MsgBox, Mask Cmd+Shift ; ............................................{{{1
+;*f1::MsgBox, Mask Cmd+Shift ; ...........................................{{{1
 
 ; Don't map {Alt-Shift} to {Ctrl-Shift}, but keep it as {Alt-Shift}, because the
 ; former is already taken due to masking the Cmd-layer above.
 
-;  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
 *sc02::Send, +!1
 *sc03::Send, +!2
-*sc04::Send, +!3
+;*sc04::Send, +!3                    ; Don't shadow Cmd-Shift-3
 *sc05::Send, +!4
 *sc06::Send, +!5
 *sc07::Send, +!6
@@ -502,8 +534,8 @@ Pause::
 *sc0b::Send, +!0
 *sc0c::Send, +!-
 *sc0d::Send, +!=
-; q  w  e  r  t  y  u  i  o  p  [  ]
-;*sc10::Send, +!q
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Send, +!q
 *sc11::Send, +!w
 *sc12::Send, +!e
 *sc13::Send, +!r
@@ -513,22 +545,23 @@ Pause::
 *sc17::Send, +!i
 *sc18::Send, +!o
 *sc19::Send, +!p
-*sc1a::Send, !p ; WindowsTerminal doesn't seem to recognize +![ and +!]
-*sc1b::Send, !n ; (map prevTab/nextTab to alt-p/-n in settings.json)
-; a  s  d  f  g  h  j  k  l  ;  '  \
+*sc1a::Send, +![
+*sc1b::Send, +!]
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +!a
 *sc1f::Send, +!s
 *sc20::Send, +!d
 *sc21::Send, +!f
 *sc22::Send, +!g
-;*sc23::Send, +!h
+*sc23::Send, +!h
 *sc24::Send, +!j
 *sc25::Send, +!k
 *sc26::Send, +!l
 *sc27::Send, +!;
 *sc28::Send, +!'
 *sc2b::Send, +!\
-; z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
+*sc56::Send, +!{sc56}
 *sc2c::Send, +!z
 *sc2d::Send, +!x
 *sc2e::Send, +!c
@@ -539,16 +572,23 @@ Pause::
 *sc33::Send, +!,
 *sc34::Send, +!.
 *sc35::Send, +!/
-; Special
+;; Special
 *sc14b::Send, +!{Left}
 *sc14d::Send, +!{Right}
 *sc148::Send, +!{Up}
 *sc150::Send, +!{Down}
 
+; WindowsTerminal doesn't seem to recognize +![ and +!], so use alt-p/alt-n
+; instead. Map prevTab/nextTab accordingly in settings.json.
+#if WinActive("ahk_exe WindowsTerminal") and modifiers() == mod_cmd | mod_shift
+
+*sc1a::Send, !p
+*sc1b::Send, !n
+
 ; .........................................................................}}}
 
 #if (WinActive("ahk_exe WindowsTerminal.exe") or WinActive("ahk_exe nvim-qt.exe")) and modifiers() == mod_opt
-*f1::MsgBox, Backspace ; .................................................{{{1
+;*f1::MsgBox, Backspace ; ................................................{{{1
 
 ; Delete word with Opt-h
 *sc24::Send, !{Backspace} ; ^{Backspace} doesn't work neither in WindowsTerminal
@@ -557,9 +597,9 @@ Pause::
 ; .........................................................................}}}
 
 #if GetKeyState("RAlt", "P") and !GetKeyState("Shift", "P")
-*f1::MsgBox, Quick Launcher ; ............................................{{{1
+;*f1::MsgBox, Quick Launcher ; ...........................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
 *sc02::Return
 *sc03::Return
@@ -573,7 +613,7 @@ Pause::
 *sc0b::Return
 *sc0c::Return
 *sc0d::Return
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Return
 *sc11::Return
 *sc12::Return
@@ -581,12 +621,12 @@ Pause::
 *sc14::Return
 *sc15::Return
 *sc16::Launch(CODE_WIN, CODE_RUN)
-*sc17::Send, #{Tab} ; Open fugly Task View with RCmd-c
+*sc17::Send, #{Tab}                  ; Open fugly Task View with RCmd-c
 *sc18::Return
 *sc19::Return
 *sc1a::Return
 *sc1b::Return
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Return
 *sc1f::Launch(WEB_BROWSER_WIN, WEB_BROWSER_RUN)
 *sc20::Launch(EDITOR_WIN, EDITOR_RUN)
@@ -599,142 +639,205 @@ Pause::
 *sc27::Return
 *sc28::Return
 *sc2b::Return
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
 *sc2c::Return
 *sc2d::Return
 *sc2e::CycleVisibleWindows("next")
-*sc2f::CycleVisibleWindows("prev")
+*sc2f::CycleVisibleWindows("previous")
 *sc30::Return
 *sc31::Return
 *sc32::Launch(MAIL_WIN, MAIL_RUN)
-*sc33::Send, ^,
+*sc33::Send, ^,                      ; Open app settings
 *sc34::Return
 *sc35::Return
 
 ; .........................................................................}}}
 
 #if GetKeyState("RAlt", "P") and GetKeyState("Shift", "P")
-*f1::MsgBox, Quick Launcher (Shift) ; ....................................{{{1
+;*f1::MsgBox, Quick Launcher (Shift) ; ...................................{{{1
 
-; Open task manager with RCmd-Shift-a
-*sc1e::Launch(TASK_MANAGER_WIN, TASK_MANAGER_RUN)
-
-; Open git gui with RCmd-Shift-g
-*sc16::Launch(GIT_GUI_WIN, GIT_GUI_RUN)
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+*sc29::Return
+*sc02::Return
+*sc03::Return
+*sc04::Return
+*sc05::Return
+*sc06::Return
+*sc07::Return
+*sc08::Return
+*sc09::Return
+*sc0a::Return
+*sc0b::Return
+*sc0c::Return
+*sc0d::Return
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Return
+*sc11::Return
+*sc12::Return
+*sc13::Return
+*sc14::Return
+*sc15::Return
+*sc16::Launch(GIT_GUI_WIN, GIT_GUI_RUN) ; Open git gui
+*sc17::Return
+*sc18::Return
+*sc19::Return
+*sc1a::Return
+*sc1b::Return
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+*sc1e::Launch(TASK_MANAGER_WIN, TASK_MANAGER_RUN) ; Open task manager
+*sc1f::Return
+*sc20::Return
+*sc21::Return
+*sc22::Return
+*sc23::Return
+*sc24::Return
+*sc25::Return
+*sc26::Return
+*sc27::Return
+*sc28::Return
+*sc2b::Return
+;; `  z  x  c  v  b  n  m  ,  .  /
+*sc56::Return
+*sc2c::Return
+*sc2d::Return
+*sc2e::Return
+*sc2f::Return
+*sc30::Return
+*sc31::Return
+*sc32::Return
+*sc33::Return
+*sc34::Return
+*sc35::Return
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_ctrl | mod_opt
-*f1::MsgBox, Spectacle-like shortcuts (Ctrl+Opt) ; .......................{{{1
+;*f1::MsgBox, Spectacle-like shortcuts (Ctrl+Opt) ; ......................{{{1
 
-; Switch to next virtual desktop with Ctrl-Opt-l.
-*sc19::Send, ^#{Right}
-
-; Switch to previous virtual desktop with Ctrl-Opt-h.
-*sc24::Send, ^#{Left}
-
-; Move to left monitor with Ctrl-Opt-[.
-*sc1a::Send, #+{Left}
-
-; Move to right monitor with Ctrl-Opt-].
-*sc1b::Send, #+{Right}
-
-; Make window bigger with Ctrl-Opt-+.
-*sc0d::
-    delta := 20
-    WinGetPos, x, y, width, height, A
-    WinMove, A, , x - delta, y - delta, width + delta * 2, height + delta * 2
-    Return
-
-; Make window smaller with Ctrl-Opt--.
-*sc0c::
-    delta := -20
-    WinGetPos, x, y, width, height, A
-    WinMove, A, , x - delta, y - delta, width + delta * 2, height + delta * 2
-    Return
-
-; Restore window with Ctrl-Opt-Backspace.
-*sc0e::Send, !{Space}W
-
-; Maximize window with Ctrl-Opt-f.
-*sc15::WinMaximize A
-
-; Pin window to the left side with Ctrl-Opt-(.
-*sc0a::Send, #{Left}
-
-; Pin window to the right side with Ctrl-Opt-).
-*sc0b::Send, #{Right}
-
-; Pin window to the top side with Ctrl-Opt-j.
-*sc2e::Send, #{Up}
-
-; Pin window to the bottom side with Ctrl-Opt-k.
-*sc2f::Send, #{Down}
-
-; Center window with Ctrl-Opt-c.
-*sc17::
-    hwnd := WinExist("A")
-    WinGetPos, , , width, height
-    VarSetCapacity(info, 10 * 4)
-    NumPut(10 * 4, info) ; cbSize, rcMonitor, rcWork, dwFlags
-    monitor := DllCall("MonitorFromWindow"
-        , "UInt", hwnd
-        , "UInt", 0x2
-        , "Int")
-    DllCall("GetMonitorInfo"
-        , "UInt", monitor
-        , "UInt", &info
-        , "Int")
-    rcWorkLeft   := NumGet(info, 5 * 4, "Int")
-    rcWorkTop    := NumGet(info, 6 * 4, "Int")
-    rcWorkRight  := NumGet(info, 7 * 4, "Int")
-    rcWorkBottom := NumGet(info, 8 * 4, "Int")
-    x := (rcWorkRight - width) / 2
-    y := (rcWorkBottom - height) / 2
-    WinMove, A, , x, y
-    Return
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+*sc0a::Send, #{Left}                 ; Pin window to the left side
+*sc0b::Send, #{Right}                ; Pin window to the right side
+*sc0c::ResizeWindow("smaller")       ; Make window smaller
+*sc0d::ResizeWindow("larger")        ; Make window bigger
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+;*sc14::
+;*sc15::
+*sc15::WinMaximize A                 ; Maximize window
+;*sc16::
+*sc17::CenterWindow()                ; Center window
+;*sc18::
+*sc19::Send, ^#{Right}               ; Switch to next virtual desktop
+*sc1a::Send, #+{Left}                ; Move to left monitor
+*sc1b::Send, #+{Right}               ; Move to right monitor
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
+*sc24::Send, ^#{Left}                ; Switch to previous virtual desktop
+;*sc25::
+;*sc26::
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+*sc2e::Send, #{Up}                   ; Pin window to the top side
+*sc2f::Send, #{Down}                 ; Pin window to the bottom side
+;*sc30::
+;*sc31::
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
+;; Special
+*sc0e::Send, !{Space}W               ; Restore window
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_ctrl | mod_cmd
-*f1::msgbox, Numpad (Cmd+Ctrl) ; .........................................{{{1
+;*f1::msgbox, Numpad (Cmd+Ctrl) ; ........................................{{{1
 
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
 *sc09::Send, 7
 *sc0a::Send, 8
 *sc0b::Send, 9
 *sc0c::Send, *
-
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
+;*sc13::
+;*sc14::
+;*sc15::
 *sc16::Send, 4
 *sc17::Send, 5
 *sc18::Send, 6
 *sc19::Send, {+}
-
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
+;*sc1e::
+;*sc1f::
+;*sc20::
+;*sc21::
+;*sc22::
+;*sc23::
 *sc24::Send, 1
 *sc25::Send, 2
 *sc26::Send, 3
 *sc27::Send, -
-
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+;*sc31::
 *sc32::Send, 0
 *sc33::Send, ,
 *sc34::Send, .
 *sc35::Send, /
-
-; Open emoji list with Cmd-Ctrl-Space
-*sc39::Send, #.
+;; Special
+*sc39::Send, #.                      ; Open emoji list
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_cmd
-*f1::MsgBox, Cmd ; .......................................................{{{1
+;*f1::MsgBox, Cmd ; ......................................................{{{1
 
-*sc0f::
-    lalt_down := true
-    Send, {LAlt down}{Tab}
-    Return
-
-; §  1  2  3  4  5  6  7  8  9  0  -  =
-*sc29::Send, #{sc20}
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+*sc29::Send, #{sc20}                 ; Show desktop
 *sc02::Send, ^1
 *sc03::Send, ^2
 *sc04::Send, ^3
@@ -747,9 +850,10 @@ Pause::
 *sc0b::Send, ^0
 *sc0c::Send, ^-
 *sc0d::Send, ^=
-; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Send, !{F4}            ; or ^{F4} or !{Space}S
-                              ; (latter doesn't work for eg Opera)
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Send, !{F4}                   ; Quit active application
+                                     ; (^{F4} or !{Space}S work as well, latter one
+                                     ; doesn't work for eg Opera, though)
 *sc11::Send, ^w
 *sc12::Send, ^e
 *sc13::Send, ^r
@@ -761,20 +865,20 @@ Pause::
 *sc19::Send, ^p
 *sc1a::Send, ^[
 *sc1b::Send, ^]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, ^a
 *sc1f::Send, ^s
 *sc20::Send, ^d
 *sc21::Send, ^f
 *sc22::Send, ^g
-*sc23::WinMinimize A
+*sc23::WinMinimize A                 ; Hide active window
 *sc24::Send, ^j
 *sc25::Send, ^k
 *sc26::Send, ^l
 *sc27::Send, ^;
 *sc28::Send, ^'
 *sc2b::Send, ^\
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::SwitchToNextWindow()
 *sc2c::Send, ^z
 *sc2d::Send, ^x
@@ -782,33 +886,35 @@ Pause::
 *sc2f::Send, ^v
 *sc30::Send, ^b
 *sc31::Send, ^n
-*sc32::Send, ^m               ; or !{Space}n (latter doesn't work for eg Opera)
+*sc32::Send, ^m
 *sc33::Send, ^,
 *sc34::Send, ^.
 *sc35::Send, ^/
-; Special
+;; Special
 *sc0e::Send, ^{Backspace}
-vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
+ vk01::Send, ^{LButton}              ; NOTE: using * breaks Cmd-Tab.
 *WheelUp::Send, ^{WheelUp}
 *WheelDown::Send, ^{WheelDown}
 
-; Spotlight with {LAlt}
-*sc39::Send, #{sc1f}
+*sc0f::PressAltTab()
+    lalt_down := true
+    Send, {LAlt down}{Tab}
+    Return
 
-; Spotlight with {RAlt}
+*sc39::Send, #{sc1f}                 ; Spotlight with {LAlt}
 #if GetKeyState("RAlt", "P") and !GetKeyState("Shift", "P")
-*sc39::Send, #{sc1f}
+*sc39::Send, #{sc1f}                 ; Spotlight with {RAlt}
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_cmd | mod_shift
-*f1::MsgBox, Modifiers: Cmd+Shift ; ......................................{{{1
+;*f1::MsgBox, Modifiers: Cmd+Shift ; .....................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
 *sc02::Send, +^1
 *sc03::Send, +^2
-*sc04::Send, {PrintScreen}
+*sc04::Send, {PrintScreen}           ; Take a screenshot
 *sc05::Send, +^4
 *sc06::Send, +^5
 *sc07::Send, +^6
@@ -818,7 +924,7 @@ vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
 *sc0b::Send, +^0
 *sc0c::Send, +^-
 *sc0d::Send, +^=
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, +^q
 *sc11::Send, +^w
 *sc12::Send, +^e
@@ -831,7 +937,7 @@ vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
 *sc19::Send, +^p
 *sc1a::Send, +^[
 *sc1b::Send, +^]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +^a
 *sc1f::Send, +^s
 *sc20::Send, +^d
@@ -844,7 +950,8 @@ vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
 *sc27::Send, +^;
 *sc28::Send, +^'
 *sc2b::Send, +^\
-; z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
 *sc2c::Send, +^z
 *sc2d::Send, +^x
 *sc2e::Send, +^c
@@ -855,49 +962,132 @@ vk01::Send, ^{LButton}        ; NOTE: using * breaks Cmd-Tab.
 *sc33::Send, +^,
 *sc34::Send, +^.
 *sc35::Send, +^/
-; Special
+;; Special
 *vk01::Send, ^{LButton}
-*F12::PowerOffMonitor()
-
-PowerOffMonitor() {
-    WM_SYSCOMMAND   := 0x0112
-    SC_MONITORPOWER := 0xf170
-    SHUT_OFF        := 2
-    SendMessage, %WM_SYSCOMMAND%, %SC_MONITORPOWER%, %SHUT_OFF%, , Program Manager
-}
+*F12::LockWorkStation()
 
 ; .........................................................................}}}
 
 #if !WinActive("ahk_group CONTROL_CHARS_EXCLUDES") and modifiers() == mod_ctrl
-*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl  ; ........{{{1
+;*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl  ; .......{{{1
 
-*sc31::Send, {Left}
-*sc15::Send, {Right}
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
 *sc13::Send, {Up}
-*sc26::Send, {Down}
-*sc20::Send, {End}
+;*sc14::
+*sc15::Send, {Right}
+;*sc16::
+;*sc17::
+;*sc18::
+;*sc19::
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, {Home}
-*sc24::Send, {Backspace}
+;*sc1f::
+*sc20::Send, {End}
+;*sc21::
+;*sc22::
 *sc23::Send, {Delete}
+*sc24::Send, {Backspace}
+;*sc25::
+*sc26::Send, {Down}
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+*sc31::Send, {Left}
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
 
 ; .........................................................................}}}
 
 #if !WinActive("ahk_group CONTROL_CHARS_EXCLUDES") and modifiers() == mod_ctrl | mod_shift
-*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl+Shift ; ...{{{1
+;*f1::MsgBox, terminal-like control characters, Modifiers: Ctrl+Shift ; ..{{{1
 
-*sc31::Send, +{Left}
-*sc15::Send, +{Right}
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
+;*sc29::
+;*sc02::
+;*sc03::
+;*sc04::
+;*sc05::
+;*sc06::
+;*sc07::
+;*sc08::
+;*sc09::
+;*sc0a::
+;*sc0b::
+;*sc0c::
+;*sc0d::
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+;*sc10::
+;*sc11::
+;*sc12::
 *sc13::Send, +{Up}
-*sc26::Send, +{Down}
-*sc20::Send, +{End}
+;*sc14::
+*sc15::Send, +{Right}
+;*sc16::
+;*sc17::
+;*sc18::
+;*sc19::
+;*sc1a::
+;*sc1b::
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, +{Home}
+;*sc1f::
+*sc20::Send, +{End}
+;*sc21::
+;*sc22::
+;*sc23::
+;*sc24::
+;*sc25::
+*sc26::Send, +{Down}
+;*sc27::
+;*sc28::
+;*sc2b::
+;; `  z  x  c  v  b  n  m  ,  .  /
+;*sc56::
+;*sc2c::
+;*sc2d::
+;*sc2e::
+;*sc2f::
+;*sc30::
+*sc31::Send, +{Left}
+;*sc32::
+;*sc33::
+;*sc34::
+;*sc35::
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_opt
-*f1::MsgBox, Modifiers: Opt ; ............................................{{{1
+;*f1::MsgBox, Modifiers: Opt ; ...........................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Send, !{sc29}
 *sc02::Send, ¹
 *sc03::Send, ²
@@ -911,7 +1101,7 @@ PowerOffMonitor() {
 *sc0b::Send, ⁰
 *sc0c::Send, –
 *sc0d::Send, !{sc0d}
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, !{sc10}
 *sc11::Send, !{sc11}
 *sc12::Send, …
@@ -924,7 +1114,7 @@ PowerOffMonitor() {
 *sc19::Send, !{sc19}
 *sc1a::Send, !{sc1a}
 *sc1b::Send, !{sc1b}
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, ä
 *sc1f::Send, ö
 *sc20::Send, €
@@ -937,28 +1127,28 @@ PowerOffMonitor() {
 *sc27::Send, ß
 *sc28::Send, !{sc28}
 *sc2b::Send, !{sc2b}
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Send, !{sc56}
 *sc2c::Send, !{sc2c}
 *sc2d::Send, !{sc2d}
 *sc2e::Send, !{sc2e}
-*sc2f::Send, !{sc2f}
+*sc2f::Send, #{sc2f}                 ; Open clipboard with {Win-v}
 *sc30::Send, ✗
 *sc31::Send, ^{Left}
 *sc32::Send, !{sc32}
 *sc33::Send, ₩
 *sc34::Send, ✔
 *sc35::Send, !{sc35}
-; Special
+;; Special
 *sc1c::Send, !{Enter}
 *vk01::Send, !{LButton}
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_shift | mod_opt
-*f1::MsgBox, Modifiers: Shift+Opt ; ......................................{{{1
+;*f1::MsgBox, Modifiers: Shift+Opt ; .....................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Send, +!{sc29}
 *sc02::Send, +!1
 *sc03::Send, +!2
@@ -972,7 +1162,7 @@ PowerOffMonitor() {
 *sc0b::Send, +!0
 *sc0c::Send, +!{sc0c}
 *sc0d::Send, +!{sc0d}
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, +!;
 *sc11::Send, +!,
 *sc12::Send, +!.
@@ -985,7 +1175,7 @@ PowerOffMonitor() {
 *sc19::Send, +!l
 *sc1a::Send, +![
 *sc1b::Send, +!]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, Ä
 *sc1f::Send, Ö
 *sc20::Send, +!e
@@ -998,8 +1188,8 @@ PowerOffMonitor() {
 *sc27::Send, +!s
 *sc28::Send, +!'
 *sc2b::Send, +!\
-; `  z  x  c  v  b  n  m  ,  .  /
-;*sc56::Send, +!{sc0d}
+;; `  z  x  c  v  b  n  m  ,  .  /
+*sc56::Send, +!{sc56}
 *sc2c::Send, +!{sc2c}
 *sc2d::Send, +!q
 *sc2e::Send, +!j
@@ -1010,16 +1200,16 @@ PowerOffMonitor() {
 *sc33::Send, +!w
 *sc34::Send, +!v
 *sc35::Send, +!z
-; Special
+;; Special
 *sc1c::Send, +!{Enter}
 *vk01::Send, +!{LButton}
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_cmd | mod_opt
-*f1::MsgBox, Modifiers: Cmd+Opt ; ........................................{{{1
+;*f1::MsgBox, Modifiers: Cmd+Opt ; .......................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Send, ^!{sc29}
 *sc02::Send, ^!1
 *sc03::Send, ^!2
@@ -1031,9 +1221,9 @@ PowerOffMonitor() {
 *sc09::Send, ^!8
 *sc0a::Send, ^!9
 *sc0b::Send, ^!0
-;*sc0c::Send, ^!{sc0c}
-;*sc0d::Send, ^!{sc0d}
-; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc0c::Send, ^!{sc0c}
+*sc0d::Send, ^!{sc0d}
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, ^!q
 *sc11::Send, ^!w
 *sc12::Send, ^!e
@@ -1046,7 +1236,7 @@ PowerOffMonitor() {
 *sc19::Send, ^!p
 *sc1a::Send, ^![
 *sc1b::Send, ^!]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, ^!a
 *sc1f::Send, ^!s
 *sc20::Send, ^!d
@@ -1059,8 +1249,8 @@ PowerOffMonitor() {
 *sc27::Send, ^!;
 *sc28::Send, ^!'
 *sc2b::Send, ^!\
-; `  z  x  c  v  b  n  m  ,  .  /
-;*sc56::Send, !{sc0d}
+;; `  z  x  c  v  b  n  m  ,  .  /
+*sc56::Send, !{sc56}
 *sc2c::Send, ^!z
 *sc2d::Send, ^!x
 *sc2e::Send, ^!c
@@ -1074,9 +1264,9 @@ PowerOffMonitor() {
 ; .........................................................................}}}
 
 #if modifiers() == mod_ctrl
-*f1::MsgBox, Modifiers: Ctrl ; ...........................................{{{1
+;*f1::MsgBox, Modifiers: Ctrl ; ..........................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
 *sc02::Return
 *sc03::Return
@@ -1090,20 +1280,20 @@ PowerOffMonitor() {
 *sc0b::Return
 *sc0c::Return
 *sc0d::Return
-; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Send, ^q                      ; Replace C-; with C-@
+;; q  w  e  r  t  y  u  i  o  p  [  ]
+*sc10::Send, ^q                      ; Map to C-@ (instead of C-;)
 *sc11::Send, ^{vkdc}                 ; Map to C-^
 *sc12::Return
 *sc13::Send, ^p
 *sc14::Send, ^y
 *sc15::Send, ^f
 *sc16::Send, ^g
-*sc17::Send, {Escape}                ; Replace C-c with ⎋
+*sc17::Send, {Escape}                ; Map to ⎋ (instead of C-c)
 *sc18::Send, ^r
 *sc19::Send, ^l
-*sc1a::Send, ^c                      ; Replace C-[ with C-c
+*sc1a::Send, ^c                      ; Map to C-c (instead of C-[)
 *sc1b::Send, ^{vkdd}
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, ^a
 *sc1f::Send, ^o
 *sc20::Send, ^e
@@ -1116,7 +1306,7 @@ PowerOffMonitor() {
 *sc27::Send, ^s
 *sc28::Send, ^{vkbc}                 ; Map to C-_
 *sc2b::Send, ^{vkbf}                 ; Map to C-\
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
 *sc2c::Return
 *sc2d::Send, ^q
@@ -1128,16 +1318,16 @@ PowerOffMonitor() {
 *sc33::Send, ^w
 *sc34::Send, ^v
 *sc35::Send, ^z
-; Special
+;; Special
 ;*sc39::Send, ^{Space}               ; Remap {Ctrl-Space} to {Alt-;} instead
 *sc39::Send, !{vk00ba}               ; because Hunt-and-Peck's hotkey is hardcoded.
 
 ; .........................................................................}}}
 
 #if modifiers() == mod_shift
-*f1::MsgBox, Modifiers: Shift ; ..........................................{{{1
+;*f1::MsgBox, Modifiers: Shift ; .........................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
 *sc02::Send, ~
 *sc03::Send, @
@@ -1151,7 +1341,7 @@ PowerOffMonitor() {
 *sc0b::Send, &
 *sc0c::Send, {Text}``
 *sc0d::Return
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, ?
 *sc11::Send, =
 *sc12::Send, :
@@ -1164,7 +1354,7 @@ PowerOffMonitor() {
 *sc19::Send, L
 *sc1a::Send, {{}
 *sc1b::Send, {}}
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, A
 *sc1f::Send, O
 *sc20::Send, E
@@ -1177,7 +1367,7 @@ PowerOffMonitor() {
 *sc27::Send, S
 *sc28::Send, _
 *sc2b::Send, |
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
 *sc2c::Send, `%
 *sc2d::Send, Q
@@ -1189,7 +1379,7 @@ PowerOffMonitor() {
 *sc33::Send, W
 *sc34::Send, V
 *sc35::Send, Z
-; Special
+;; Special
 *sc1c::Send, +{Enter}
 *WheelUp::Send, +{WheelUp}
 *WheelDown::Send, +{WheelDown}
@@ -1197,9 +1387,9 @@ PowerOffMonitor() {
 ; .........................................................................}}}
 
 #if
-*f1::MsgBox, No modifiers ; ..............................................{{{1
+;*f1::MsgBox, No modifiers ; .............................................{{{1
 
-; §  1  2  3  4  5  6  7  8  9  0  -  =
+;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
 *sc02::Send, {Text}^
 *sc03::Send, <
@@ -1213,7 +1403,7 @@ PowerOffMonitor() {
 *sc0b::Send, )
 *sc0c::Send, '
 *sc0d::Return
-; q  w  e  r  t  y  u  i  o  p  [  ]
+;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, {;}
 *sc11::Send, ,
 *sc12::Send, .
@@ -1226,7 +1416,7 @@ PowerOffMonitor() {
 *sc19::Send, l
 *sc1a::Send, [
 *sc1b::Send, ]
-; a  s  d  f  g  h  j  k  l  ;  '  \
+;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send, a
 *sc1f::Send, o
 *sc20::Send, e
@@ -1239,7 +1429,7 @@ PowerOffMonitor() {
 *sc27::Send, s
 *sc28::Send, -
 *sc2b::Send, \
-; `  z  x  c  v  b  n  m  ,  .  /
+;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Return
 *sc2c::Send, {!}
 *sc2d::Send, q
@@ -1251,14 +1441,14 @@ PowerOffMonitor() {
 *sc33::Send, w
 *sc34::Send, v
 *sc35::Send, z
-; Special
+;; Special
 *sc1c::Send, {Enter}
 *sc39::Send, {Space}
 *F12::Send, #a
 
 ; .........................................................................}}}
 
-; Launch .................................................................{{{1
+; Functions ..............................................................{{{1
 
 Launch(win, prog, forceSingleInstance := true, runAsAdmin := false) {
     if forceSingleInstance {
@@ -1273,16 +1463,6 @@ Launch(win, prog, forceSingleInstance := true, runAsAdmin := false) {
     }
     ShellRun(prog, , , runAsAdmin ? "runas" : "")
 }
-
-LaunchExplorer() {
-    global
-    Launch(EXPLORER_WIN, EXPLORER_RUN)
-    ControlFocus, %EXPLORER_CONTENT%, %EXPLORER_WIN%
-}
-
-; .........................................................................}}}
-
-; CmdRet .................................................................{{{1
 
 ; Taken from https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84266&sid=eff012cadb7a851b2c18f5f03b68408f
 CmdRet(exec, callback := "", encoding := "CP0") {
@@ -1365,28 +1545,23 @@ CmdRet(exec, callback := "", encoding := "CP0") {
     Return output
 }
 
-; .........................................................................}}}
-
-; ShellRun ...............................................................{{{1
+Global SW_HIDE            := 0
+Global SW_SHOWNORMAL      := 1
+Global SW_SHOWMINIMIZED   := 2
+Global SW_SHOWMAXIMIZED   := 3
+Global SW_SHOWNOACTIVATE  := 4
+Global SW_SHOW            := 5
+Global SW_MINIMIZE        := 6
+Global SW_SHOWMINNOACTIVE := 7
+Global SW_SHOWNA          := 8
+Global SW_RESTORE         := 9
+Global SW_SHOWDEFAULT     := 10
+Global SW_FORCEMINIMIZE   := 11
 
 ; Taken from https://github.com/Lexikos/AutoHotkey-Release/blob/master/installer/source/Lib/ShellRun.ahk
 ; Also see https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
 ; and https://devblogs.microsoft.com/oldnewthing/20130318-00/?p=4933
 ; Operation can be one of {explorer find open print runas}
-
-SW_HIDE            := 0
-SW_SHOWNORMAL      := 1
-SW_SHOWMINIMIZED   := 2
-SW_SHOWMAXIMIZED   := 3
-SW_SHOWNOACTIVATE  := 4
-SW_SHOW            := 5
-SW_MINIMIZE        := 6
-SW_SHOWMINNOACTIVE := 7
-SW_SHOWNA          := 8
-SW_RESTORE         := 9
-SW_SHOWDEFAULT     := 10
-SW_FORCEMINIMIZE   := 11
-
 ShellRun(file, params := "", dir := "", operation := "open", show := 1) {
     SWFO_NEEDDISPATCH   := 0x1
     SWFO_INCLUDEPENDING := 0x2
@@ -1448,10 +1623,6 @@ ShellRun(file, params := "", dir := "", operation := "open", show := 1) {
         ObjRelease(ptlb)
     }
 }
-
-; .........................................................................}}}
-
-; Explorer-related macros ................................................{{{1
 
 ; Get explorer's current folder
 ; See https://docs.microsoft.com/en-us/windows/win32/shell/shellfolderview
@@ -1554,10 +1725,6 @@ NavigateSHApp(path, hwnd := 0) {
     Return res
 }
 
-; .........................................................................}}}
-
-; SwitchToNextWindow .....................................................{{{1
-
 ; Switch between an app's windows
 SwitchToNextWindow(hwnd := 0) {
     if !hwnd {
@@ -1580,10 +1747,6 @@ SwitchToNextWindow(hwnd := 0) {
     }
     Return
 }
-
-; .........................................................................}}}
-
-; AltTabWindows ..........................................................{{{1
 
 ; Taken from https://www.autohotkey.com/boards/viewtopic.php?t=28760#p326541
 AltTabWindows() {
@@ -1640,10 +1803,6 @@ IsInvisibleWin10BackgroundAppWindow(hwnd) {
     }
     Return NumGet(value) != 0
 }
-
-; .........................................................................}}}
-
-; CycleVisibleWindows ....................................................{{{1
 
 ; Predictable version of Send !{Escape}
 CycleVisibleWindows(dir := "next") {
@@ -1788,5 +1947,250 @@ GetTopLeftAsAngle(hwnd) {
         , "cdecl Double") * 180 / PI + 180
 }
 
-; .........................................................................}}}
+; Resize the active window
+ResizeWindow(sizing) {
+    delta := 0
+    if (sizing == "larger") {
+        delta := 20
+    } else if (sizing == "smaller") {
+        delta := -20
+    }
+    WinGetPos, x, y, width, height, A
+    WinMove, A, , x - delta, y - delta, width + delta * 2, height + delta * 2
+}
 
+CenterWindow(hwnd := 0) {
+    if (!hwnd) {
+        hwnd := WinExist("A")
+    }
+    WinGetPos, , , width, height
+    VarSetCapacity(info, 10 * 4)
+    NumPut(10 * 4, info) ; cbSize, rcMonitor, rcWork, dwFlags
+    monitor := DllCall("MonitorFromWindow"
+        , "UInt", hwnd
+        , "UInt", 0x2
+        , "Int")
+    DllCall("GetMonitorInfo"
+        , "UInt", monitor
+        , "UInt", &info
+        , "Int")
+    rcWorkLeft   := NumGet(info, 5 * 4, "Int")
+    rcWorkTop    := NumGet(info, 6 * 4, "Int")
+    rcWorkRight  := NumGet(info, 7 * 4, "Int")
+    rcWorkBottom := NumGet(info, 8 * 4, "Int")
+    x := (rcWorkRight - width) / 2
+    y := (rcWorkBottom - height) / 2
+    WinMove, A, , x, y
+}
+
+LockWorkStation() {
+    RegRead, disabled, HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, DisableLockWorkstation
+    if !disabled {
+        DllCall("LockWorkStation")
+        Return
+    }
+
+    WTS_CURRENT_SERVER_HANDLE := 0
+    WTS_CURRENT_SESSION       := -1
+
+    DllCall("wtsapi32.dll\WTSDisconnectSession"
+        , "Ptr", WTS_CURRENT_SERVER_HANDLE
+        , "UInt", WTS_CURRENT_SESSION
+        , "Int", 1
+        , "Int")
+}
+
+PowerOffMonitor() {
+    WM_SYSCOMMAND   := 0x0112
+    SC_MONITORPOWER := 0xf170
+    SHUT_OFF        := 2
+    SendMessage, %WM_SYSCOMMAND%, %SC_MONITORPOWER%, %SHUT_OFF%, , Program Manager
+}
+
+Global EXPLORER_CONTENT := "DirectUIHWND2"
+Global EXPLORER_SIDEBAR := "SysTreeView321"
+Global EXPLORER_DESKTOP := "SysListView321"
+
+; Go one level up if the active window is an explorer
+ExplorerOneLevelUp() {
+    ControlGetFocus, c
+    if (c == EXPLORER_SIDEBAR) {
+        Send, {Left}{Enter}
+    } else if (c == EXPLORER_CONTENT) {
+        Send, !{Up}
+    } else {
+        Send, {Left}
+    }
+}
+
+; Go one level down if the active window is an explorer
+ExplorerOneLevelDown() {
+    ControlGetFocus, c
+    if (c == EXPLORER_SIDEBAR) {
+        Send, {Right}{Enter}
+    } else if (c == EXPLORER_CONTENT) {
+        Send, {Enter}
+    } else {
+        Send, {Right}
+    }
+}
+
+; Select the previous item if the active window is an explorer
+ExplorerPreviousItem() {
+    ControlGetFocus, c
+    if (c == EXPLORER_SIDEBAR) {
+        Send, {Up}{Enter}
+    } else if (c == EXPLORER_CONTENT) {
+        Send, {Up}
+    } else {
+        Send, {Up}
+    }
+}
+
+; Select the next item if the active window is an explorer
+ExplorerNextItem() {
+    ControlGetFocus, c
+    if (c == EXPLORER_SIDEBAR) {
+        Send, {Down}{Enter}
+    } else if (c == EXPLORER_CONTENT) {
+        Send, {Down}
+    } else {
+        Send, {Down}
+    }
+}
+
+; Open the selected files in the editor if the active window is an explorer
+ExplorerOpenInEditor() {
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+    } else if (c == EXPLORER_CONTENT) {
+        filepath := GetSHAppSelectionPaths()
+    } else if (c == EXPLORER_SIDEBAR) {
+        filepath := GetSHAppFolderPath()
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            ShellRun(EDITOR_RUN, """" . A_LoopField . """")
+        }
+    }
+}
+
+; Open the selected folder in the terminal if the active window is an explorer
+ExplorerOpenInTerminal() {
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+    } else {
+        filepath := GetSHAppSelectionPaths()
+        if !filepath {
+            filepath := GetSHAppFolderPath()
+        }
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(TERMINAL_RUN, "-d """ . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(TERMINAL_RUN, "-d """ . dirname . """")
+            }
+        }
+    }
+}
+
+; Open the selected folder in the git gui if the active window is an explorer
+ExplorerOpenInGitGui() {
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+    } else {
+        filepath := GetSHAppSelectionPaths()
+        if !filepath {
+            filepath := GetSHAppFolderPath()
+        }
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(GIT_GUI_RUN, "browse """ . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(GIT_GUI_RUN, "browse """ . dirname . """")
+            }
+        }
+    }
+}
+
+; Rename the selected item if the active window is an explorer
+ExplorerRename() {
+    ControlGetFocus, c
+    if (c == EXPLORER_CONTENT
+     || c == EXPLORER_DESKTOP
+     || c == EXPLORER_SIDEBAR) {
+        Send, {F2}
+    } else {
+        Send, {Enter}
+    }
+}
+
+; Copy the selected items' paths if the active window is an explorer
+ExplorerCopyFilepath() {
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_CONTENT) {
+        filepath := GetSHAppSelectionPaths()
+    } else if (c == EXPLORER_SIDEBAR) {
+        filepath := GetSHAppFolderPath()
+    }
+    if filepath {
+        Clipboard := filepath
+    }
+}
+
+; Create new text file if the active window is an explorer
+ExplorerCreateNewTextfile() {
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        cwd := A_Desktop
+    } else {
+        cwd := GetSHAppFolderPath()
+    }
+    if (!cwd || Substr(cwd, 1, 2) == "::") {
+        Return
+    }
+
+    dest := cwd . "\Untitled"
+    ext := ".txt"
+    n := 1
+    Loop {
+        if (n > 1) {
+            path := dest . n . ext
+        } else {
+            path := dest . ext
+        }
+        if !FileExist(path) {
+            FileOpen(path, "w")
+            SplitPath, path, filename
+            FocusSHAppItem(filename, 1 + 4 + 8 + 16)
+            Return
+        }
+        n++
+    }
+}
+
+LaunchExplorer() {
+    Launch(EXPLORER_WIN, EXPLORER_RUN)
+    ControlFocus, %EXPLORER_CONTENT%, %EXPLORER_WIN%
+}
+
+ExplorerNavigate(path) {
+    NavigateSHApp(path)
+    Send, {Tab}{Up}{Home}
+}
