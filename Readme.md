@@ -29,9 +29,13 @@ which is why I don't bind them at all and relocate the number-row to a custom nu
 
 ## Installation
 ### macOS
-The keyboard layout consists of an xml file whose [format is native to macOS](https://developer.apple.com/library/archive/technotes/tn2056/_index.html), alongside some definitions for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements).
+The keyboard layout consists of an xml file whose [format is native to macOS](https://developer.apple.com/library/archive/technotes/tn2056/_index.html),
+alongside some definitions for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements).
 
 ```sh
+git clone https://github.com/imawizard/Amalgamation.keylayout layout
+cd layout
+
 # Copy the keylayout file to make it appear as input source in keyboard settings.
 cp Amalgamation.keylayout "$HOME/Library/Keyboard Layouts/Amalgamation.keylayout" # for the current user
 sudo cp Amalgamation.keylayout "/Library/Keyboard Layouts/Amalgamation.keylayout" # or for every user
