@@ -8,13 +8,19 @@
 ListLines, Off
 SetBatchLines, -1
 Process, Priority, , H
-SetWorkingDir, % A_ScriptDir
 
 title = Amalgamation.keylayout
 
+SetStoreCapsLockMode, Off
 SetCapsLockState, AlwaysOff
 
 ; Settings ...............................................................{{{1
+
+; Env vars
+EnvGet, HOME, HOME
+EnvGet, HOMEDRIVE, HOMEDRIVE
+
+SetWorkingDir, % HOME
 
 ; Map Alt to Ctrl-Shift
 GroupAdd, MASK_CMD_LAYER_INCLUDES, ahk_exe WindowsTerminal.exe
@@ -29,10 +35,6 @@ GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe nvim.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe Emacs.exe
 ;GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe code.exe
 GroupAdd, CONTROL_CHARS_EXCLUDES, ahk_exe goneovim.exe
-
-; Env vars
-EnvGet, HOME, HOME
-EnvGet, HOMEDRIVE, HOMEDRIVE
 
 ; Apps to launch
 Global EXPLORER_WIN     := "ahk_class CabinetWClass"
@@ -1450,10 +1452,12 @@ Pause::
 
 ; Functions ..............................................................{{{1
 
-Launch(win, prog, forceSingleInstance := true, runAsAdmin := false) {
+Launch(win, cmd, forceSingleInstance := true, runAsAdmin := false, minimizeIfActive := false) {
     if forceSingleInstance {
         if WinActive(win) {
-            ;WinMinimize ; Do nothing instead
+            if minimizeIfActive {
+                WinMinimize
+            }
             Return
         } else if WinExist(win) {
             WinActivate
@@ -1461,41 +1465,55 @@ Launch(win, prog, forceSingleInstance := true, runAsAdmin := false) {
             Return
         }
     }
-    ShellRun(prog, , , runAsAdmin ? "runas" : "")
+    ShellRun(cmd, , , runAsAdmin ? "runas" : "")
 }
 
-; Taken from https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84266&sid=eff012cadb7a851b2c18f5f03b68408f
-CmdRet(exec, callback := "", encoding := "CP0") {
+; Taken from https://autohotkey.com/boards/viewtopic.php?f=76&t=84266&sid=eff012cadb7a851b2c18f5f03b68408f
+CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
     Static HANDLE_FLAG_INHERIT  := 0x00000001
     Static STARTF_USESTDHANDLES := 0x100
     Static CREATE_NO_WINDOW     := 0x08000000
 
-    hPipeRead  := ""
-    hPipeWrite := ""
-    output     := ""
-
+    inPipeRead := 0
+    inPipeWrite := 0
     DllCall("CreatePipe"
-        , "PtrP", hPipeRead
-        , "PtrP", hPipeWrite
+        , "PtrP", inPipeRead
+        , "PtrP", inPipeWrite
         , "Ptr", 0
         , "UInt", 0
         , "Int")
     DllCall("SetHandleInformation"
-        , "Ptr", hPipeWrite
+        , "Ptr", inPipeRead
         , "UInt", HANDLE_FLAG_INHERIT
         , "UInt", HANDLE_FLAG_INHERIT
         , "Int")
+
+    outPipeRead  := 0
+    outPipeWrite := 0
+    DllCall("CreatePipe"
+        , "PtrP", outPipeRead
+        , "PtrP", outPipeWrite
+        , "Ptr", 0
+        , "UInt", 0
+        , "Int")
+    DllCall("SetHandleInformation"
+        , "Ptr", outPipeWrite
+        , "UInt", HANDLE_FLAG_INHERIT
+        , "UInt", HANDLE_FLAG_INHERIT
+        , "Int")
+
     siSize := A_PtrSize*4 + 4*8 + A_PtrSize*5
     VarSetCapacity(STARTUPINFO, siSize, 0)
-    NumPut(siSize, STARTUPINFO, 0)
+    NumPut(siSize,               STARTUPINFO, 0)
     NumPut(STARTF_USESTDHANDLES, STARTUPINFO, A_PtrSize*4 + 4*7)
-    NumPut(hPipeWrite, STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*3)
-    NumPut(hPipeWrite, STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*4)
+    NumPut(inPipeRead,           STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*2)
+    NumPut(outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*3)
+    NumPut(outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*4)
 
     VarSetCapacity(PROCESS_INFORMATION, A_PtrSize*2 + 4*2, 0)
     ret := DllCall("CreateProcess"
         , "Ptr", 0
-        , "Str", exec
+        , "Str", cmd
         , "Ptr", 0
         , "Ptr", 0
         , "UInt", true
@@ -1505,23 +1523,40 @@ CmdRet(exec, callback := "", encoding := "CP0") {
         , "Ptr", &STARTUPINFO
         , "Ptr", &PROCESS_INFORMATION
         , "Int")
+
+    DllCall("CloseHandle"
+        , "Ptr", outPipeWrite
+        , "Int")
+    DllCall("CloseHandle"
+        , "Ptr", inPipeRead
+        , "Int")
+
     if !ret {
         DllCall("CloseHandle"
-            , "Ptr", hPipeRead
+            , "Ptr", outPipeRead
             , "Int")
         DllCall("CloseHandle"
-            , "Ptr", hPipeWrite
+            , "Ptr", inPipeWrite
             , "Int")
+
         throw Exception("CreateProcess is failed")
     }
+
+    if stdin {
+        w := FileOpen(inPipeWrite, "h")
+        w.Write(stdin)
+        w.Close()
+    }
     DllCall("CloseHandle"
-        , "Ptr", hPipeWrite
+        , "Ptr", inPipeWrite
         , "Int")
+
+    output  := ""
     bufsize := 4096
     VarSetCapacity(buf, bufsize)
     read := 0
     while DllCall("ReadFile"
-        , "Ptr", hPipeRead
+        , "Ptr", outPipeRead
         , "Ptr", &buf
         , "UInt", bufsize
         , "UIntP", read
@@ -1531,6 +1566,10 @@ CmdRet(exec, callback := "", encoding := "CP0") {
         (callback && callback.Call(text))
         output .= text
     }
+    DllCall("CloseHandle"
+        , "Ptr", outPipeRead
+        , "Int")
+
     hProcess := NumGet(PROCESS_INFORMATION, 0)
     hThread := NumGet(PROCESS_INFORMATION, A_PtrSize)
     DllCall("CloseHandle"
@@ -1539,9 +1578,7 @@ CmdRet(exec, callback := "", encoding := "CP0") {
     DllCall("CloseHandle"
         , "Ptr", hThread
         , "Int")
-    DllCall("CloseHandle"
-        , "Ptr", hPipeRead
-        , "Int")
+
     Return output
 }
 
@@ -1562,7 +1599,7 @@ Global SW_FORCEMINIMIZE   := 11
 ; Also see https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
 ; and https://devblogs.microsoft.com/oldnewthing/20130318-00/?p=4933
 ; Operation can be one of {explorer find open print runas}
-ShellRun(file, params := "", dir := "", operation := "open", show := 1) {
+ShellRun(cmd, params := "", dir := "", operation := "open", show := 1) {
     SWFO_NEEDDISPATCH   := 0x1
     SWFO_INCLUDEPENDING := 0x2
     SWFO_COOKIEPASSED   := 0x4
@@ -1616,7 +1653,7 @@ ShellRun(file, params := "", dir := "", operation := "open", show := 1) {
             shell := ComObj(9, pdisp, 1).Application
 
             ; IShellDispatch2.ShellExecute
-            shell.ShellExecute(file, params, dir, operation, show)
+            shell.ShellExecute(cmd, params, dir, operation, show)
 
             ObjRelease(psv)
         }
@@ -1669,7 +1706,7 @@ GetSHAppSelectionPaths(hwnd := 0) {
 ; Get the desktop's selection.
 GetDesktopSelectionPaths(ctrlClass) {
     ControlGet, hwnd, Hwnd, , % ctrlClass
-    ControlGet, selected, List, Selected Col1,, ahk_id %hwnd%
+    ControlGet, selected, List, Selected Col1,, % "ahk_id" hwnd
     Loop, Parse, selected, `n, `r
     {
         filepath := filepath . ";" . A_Desktop . "\" . A_LoopField
@@ -1730,34 +1767,35 @@ SwitchToNextWindow(hwnd := 0) {
     if !hwnd {
         hwnd := WinExist("A")
     }
-    WinGetClass, winclass, ahk_id %hwnd%
-    WinGet, procname, ProcessName, ahk_id %hwnd%
-    WinGet, windows, List, ahk_class %winclass%
+    WinGetClass, winclass, % "ahk_id" hwnd
+    WinGet, procname, ProcessName, % "ahk_id" hwnd
+    WinGet, windows, List, % "ahk_class" winclass
     i := windows + 1
     Loop {
         if (--i == 0) {
             Break
         }
         window := windows%i%
-        WinGet, tmp, ProcessName, ahk_id %window%
+        WinGet, tmp, ProcessName, % "ahk_id" window
         if (tmp == procname) {
-            WinActivate, ahk_id %window%
+            WinActivate, % "ahk_id" window
             Break
         }
     }
-    Return
 }
 
-; Taken from https://www.autohotkey.com/boards/viewtopic.php?t=28760#p326541
+; Taken from https://autohotkey.com/boards/viewtopic.php?t=28760#p326541
 AltTabWindows() {
     Static WS_EX_APPWINDOW  := 0x40000
     Static WS_EX_TOOLWINDOW := 0x80
     Static GW_OWNER         := 4
 
-    res := []
+    old := A_DetectHiddenWindows
     DetectHiddenWindows, Off
     WinGet, windows, List
+    DetectHiddenWindows, % old
 
+    res := []
     Loop % windows {
         hwnd := windows%A_Index%
         owner := hwnd
@@ -1776,7 +1814,7 @@ AltTabWindows() {
             , "UInt", owner
             , "Int")
         if (popup == hwnd) {
-            WinGet, style, ExStyle, ahk_id %hwnd%
+            WinGet, style, ExStyle, % "ahk_id" hwnd
             if ((style & WS_EX_APPWINDOW || !(style & WS_EX_TOOLWINDOW))
                 && !IsInvisibleWin10BackgroundAppWindow(hwnd)) {
                 res.Push(Format("0x{:x}", hwnd))
@@ -1807,24 +1845,24 @@ IsInvisibleWin10BackgroundAppWindow(hwnd) {
 ; Predictable version of Send !{Escape}
 CycleVisibleWindows(dir := "next") {
     windows := AltTabWindows()
-    visible := FilterNotVisibleWindows(windows)
-    if (visible.length() == 1) {
+    visible := FilterForegroundWindows(windows)
+    if (visible.Length() == 1) {
         visible := windows
     }
     sorted := SortWindowsByAngle(visible, dir != "next")
 
-    Loop % sorted.length()
+    Loop % sorted.Length()
         next := A_Index+1
     Until (WinActive("A") == sorted[A_Index])
 
-    if (next > sorted.length()) {
+    if (next > sorted.Length()) {
         next := 1
     }
 
     WinActivate, % "ahk_id" sorted[next]
 }
 
-FilterNotVisibleWindows(windows) {
+FilterForegroundWindows(windows) {
     RGN_AND       := 1
     RGN_COPY      := 5
     RGN_DIFF      := 4
@@ -1850,7 +1888,7 @@ FilterNotVisibleWindows(windows) {
             Continue
         }
 
-        WinGetPos, x, y, width, height, ahk_id %hwnd%
+        WinGetPos, x, y, width, height, % "ahk_id" hwnd
 
         rgn := DllCall("CreateRectRgn"
             , "Int", Max(x, workAreaLeft)
@@ -1920,12 +1958,12 @@ SortWindowsByAngle(windows, reverse := false) {
 }
 
 SortWindowsByAngleCallback(a, b) {
-    v1 := GetTopLeftAsAngle(a)
-    v2 := GetTopLeftAsAngle(b)
+    av := GetTopLeftAsAngle(a)
+    bv := GetTopLeftAsAngle(b)
 
-    if (v1 > v2) {
+    if (av > bv) {
         Return 1
-    } else if (v1 < v2) {
+    } else if (av < bv) {
         Return -1
     } else {
         Return a - b
@@ -1937,7 +1975,7 @@ GetTopLeftAsAngle(hwnd) {
     Static yo := A_ScreenHeight / 2
     Static PI := 4 * ATan(1)
 
-    WinGetPos, x, y, , , ahk_id %hwnd%
+    WinGetPos, x, y, , , % "ahk_id" hwnd
     x := x - xo
     y := y - yo
 
