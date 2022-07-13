@@ -1,11 +1,13 @@
 # Amalgamation.keylayout
+is a mix of [dvorak](https://en.wikipedia.org/wiki/Dvorak_keyboard_layout)
+and [qwerty](https://en.wikipedia.org/wiki/QWERTY) for my personal needs.
 
-is a personal mix of dvorak and qwerty.
+## Changes
+やっぱり having various applications not correctly recognizing the dead key that translates to symbols is too much trouble, especially in applications with vim mode that don't handle them sanely.
+[Version 1](https://github.com/imawizard/Amalgamation.keylayout/tree/v1) actually had most symbols available by means of a dead key, now these are on regular keys again and dead keys have been removed altogether.
 
-やっぱり having various applications not correctly recognizing the [dead key that translates to symbols](https://github.com/imawizard/Amalgamation.keylayout/tree/v1) is too much trouble, especially in vim mode. So now the symbols are back on the number row like in qwerty.
-
-# Installation
-
+## Installation
+### macOS
 The keyboard layout consists of an xml file whose [format is native to macOS](https://developer.apple.com/library/archive/technotes/tn2056/_index.html), alongside some definitions for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements).
 
 ```sh
@@ -17,10 +19,9 @@ sudo cp Amalgamation.keylayout "/Library/Keyboard Layouts/Amalgamation.keylayout
 mkdir -p "$HOME/.config/karabiner/assets/complex_modifications' && cp karabiner-rules.json "$_/Amalgamation.json"
 ```
 
-# Windows Port
-
-The windows version is an ahk script and is to be interpreted or embedded with [AutoHotkey](https://www.autohotkey.com).
-It tries to mimic the behaviour on macOS as closely as possible, see [amalgamation.ahk](windows).
+### Windows
+The windows version is an ahk script that is to be interpreted or embedded with [AutoHotkey](https://www.autohotkey.com).
+Furthermore it tries to mimic the keyboard experience on macOS by e.g. remapping the Alt-key to simulate Cmd or making the Return-key within Explorer rename files like in Finder, see [amalgamation.ahk](windows).
 
 ## Regular layout
 
