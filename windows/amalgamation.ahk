@@ -83,6 +83,10 @@ modifiers() {
     Return flags
 }
 
+Global EXPLORER_CONTENT := "DirectUIHWND2"
+Global EXPLORER_SIDEBAR := "SysTreeView321"
+Global EXPLORER_DESKTOP := "SysListView321"
+
 ; .........................................................................}}}
 
 ; tray and toggle ........................................................{{{1
@@ -898,7 +902,7 @@ Pause::
 *WheelUp::Send, ^{WheelUp}
 *WheelDown::Send, ^{WheelDown}
 
-*sc0f::PressAltTab()
+*sc0f::
     lalt_down := true
     Send, {LAlt down}{Tab}
     Return
@@ -2045,10 +2049,6 @@ PowerOffMonitor() {
     SendMessage, %WM_SYSCOMMAND%, %SC_MONITORPOWER%, %SHUT_OFF%, , Program Manager
 }
 
-Global EXPLORER_CONTENT := "DirectUIHWND2"
-Global EXPLORER_SIDEBAR := "SysTreeView321"
-Global EXPLORER_DESKTOP := "SysListView321"
-
 ; Go one level up if the active window is an explorer
 ExplorerOneLevelUp() {
     ControlGetFocus, c
@@ -2111,7 +2111,8 @@ ExplorerOpenInEditor() {
     if filepath {
         Loop, Parse, filepath, `;
         {
-            ShellRun(EDITOR_RUN, """" . A_LoopField . """")
+            SplitPath, % A_LoopField, , dirname
+            ShellRun(EDITOR_RUN, """" . A_LoopField . """", dirname)
         }
     }
 }
