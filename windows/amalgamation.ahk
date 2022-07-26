@@ -249,7 +249,7 @@ Pause::
 ;*sc14::
 *sc15::ExplorerOneLevelDown()
 *sc16::ExplorerOpenInGitGui()
-;*sc17::
+*sc17::ExplorerOpenInCode()
 ;*sc18::
 ;*sc19::
 ;*sc1a::
@@ -1710,7 +1710,7 @@ GetSHAppSelectionPaths(hwnd := 0) {
 ; Get the desktop's selection.
 GetDesktopSelectionPaths(ctrlClass) {
     ControlGet, hwnd, Hwnd, , % ctrlClass
-    ControlGet, selected, List, Selected Col1,, % "ahk_id" hwnd
+    ControlGet, selected, List, Selected Col1, , % "ahk_id" hwnd
     Loop, Parse, selected, `n, `r
     {
         filepath := filepath . ";" . A_Desktop . "\" . A_LoopField
@@ -1720,6 +1720,7 @@ GetDesktopSelectionPaths(ctrlClass) {
     } else {
         filepath := A_Desktop
     }
+    Return filepath
 }
 
 ; Select a file within an explorer-window
@@ -2111,8 +2112,37 @@ ExplorerOpenInEditor() {
     if filepath {
         Loop, Parse, filepath, `;
         {
-            SplitPath, % A_LoopField, , dirname
-            ShellRun(EDITOR_RUN, """" . A_LoopField . """", dirname)
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(EDITOR_RUN, """" . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(EDITOR_RUN, """" . A_LoopField . """", dirname)
+            }
+        }
+    }
+}
+
+; Open the selected files in VS Code if the active window is an explorer
+ExplorerOpenInCode() {
+    filepath := ""
+    ControlGetFocus, c
+    if (c == EXPLORER_DESKTOP) {
+        filepath := GetDesktopSelectionPaths(c)
+        msgbox, % filepath
+    } else if (c == EXPLORER_CONTENT) {
+        filepath := GetSHAppSelectionPaths()
+    } else if (c == EXPLORER_SIDEBAR) {
+        filepath := GetSHAppFolderPath()
+    }
+    if filepath {
+        Loop, Parse, filepath, `;
+        {
+            if InStr(FileExist(A_LoopField), "D") {
+                ShellRun(CODE_RUN, """" . A_LoopField . """")
+            } else if InStr(FileExist(A_LoopField), "A") {
+                SplitPath, % A_LoopField, , dirname
+                ShellRun(CODE_RUN, """" . A_LoopField . """", dirname)
+            }
         }
     }
 }
