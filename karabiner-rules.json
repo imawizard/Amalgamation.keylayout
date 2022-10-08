@@ -12,10 +12,10 @@
 		{
 			"description": "[Amalgamation] Numpad through C-⌘",
 			"manipulators": [
-				{ "type": "basic", "from": { "key_code": "8",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_7"                        }] },
-				{ "type": "basic", "from": { "key_code": "9",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_8"                        }] },
-				{ "type": "basic", "from": { "key_code": "0",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_9"                        }] },
-				{ "type": "basic", "from": { "key_code": "hyphen",              "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "8",       "modifiers": ["shift"] }] },
+				{ "type": "basic", "from": { "key_code": "7",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_7"                        }] },
+				{ "type": "basic", "from": { "key_code": "8",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_8"                        }] },
+				{ "type": "basic", "from": { "key_code": "9",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_9"                        }] },
+				{ "type": "basic", "from": { "key_code": "0",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "8",       "modifiers": ["shift"] }] },
 
 				{ "type": "basic", "from": { "key_code": "u",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_4"                        }] },
 				{ "type": "basic", "from": { "key_code": "i",                   "modifiers": { "mandatory": ["control", "left_command"] } }, "to": [{ "key_code": "keypad_5"                        }] },

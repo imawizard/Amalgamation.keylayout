@@ -790,11 +790,11 @@ Pause::
 ;*sc05::
 ;*sc06::
 ;*sc07::
-;*sc08::
-*sc09::Send, 7
-*sc0a::Send, 8
-*sc0b::Send, 9
-*sc0c::Send, *
+*sc08::Send, 7
+*sc09::Send, 8
+*sc0a::Send, 9
+*sc0b::Send, *
+;*sc0c::
 ;*sc0d::
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 ;*sc10::
@@ -1105,7 +1105,7 @@ Pause::
 *sc09::Send, ⁸
 *sc0a::Send, ⁹
 *sc0b::Send, ⁰
-*sc0c::Send, –
+*sc0c::Send, !{sc0c}
 *sc0d::Send, !{sc0d}
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, !{sc10}
@@ -1132,7 +1132,7 @@ Pause::
 *sc26::Send, !{sc26}
 *sc27::Send, ß
 *sc28::Send, !{sc28}
-*sc2b::Send, !{sc2b}
+*sc2b::Send, –
 ;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Send, !{sc56}
 *sc2c::Send, !{sc2c}
@@ -1192,8 +1192,8 @@ Pause::
 *sc25::Send, +!t
 *sc26::Send, +!n
 *sc27::Send, +!s
-*sc28::Send, +!'
-*sc2b::Send, +!\
+*sc28::Send, +!"
+*sc2b::Send, —
 ;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Send, +!{sc56}
 *sc2c::Send, +!{sc2c}
@@ -1345,11 +1345,11 @@ Pause::
 *sc09::Send, *
 *sc0a::Send, /
 *sc0b::Send, &
-*sc0c::Send, {Text}``
+*sc0c::Return
 *sc0d::Return
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, ?
-*sc11::Send, =
+*sc11::Send, {!}
 *sc12::Send, :
 *sc13::Send, P
 *sc14::Send, Y
@@ -1371,11 +1371,11 @@ Pause::
 *sc25::Send, T
 *sc26::Send, N
 *sc27::Send, S
-*sc28::Send, _
-*sc2b::Send, |
+*sc28::Send, '
+*sc2b::Send, _
 ;; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Return
-*sc2c::Send, `%
+*sc56::Send, |
+*sc2c::Send, {Text}^
 *sc2d::Send, Q
 *sc2e::Send, J
 *sc2f::Send, K
@@ -1397,17 +1397,17 @@ Pause::
 
 ;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::Return
-*sc02::Send, {Text}^
+*sc02::Send, {Text}``
 *sc03::Send, <
 *sc04::Send, >
-*sc05::Send, "
+*sc05::Send, =
 *sc06::Return
 *sc07::Return
 *sc08::Return
 *sc09::Send, {+}
 *sc0a::Send, (
 *sc0b::Send, )
-*sc0c::Send, '
+*sc0c::Return
 *sc0d::Return
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send, {;}
@@ -1433,11 +1433,11 @@ Pause::
 *sc25::Send, t
 *sc26::Send, n
 *sc27::Send, s
-*sc28::Send, -
-*sc2b::Send, \
+*sc28::Send, "
+*sc2b::Send, -
 ;; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Return
-*sc2c::Send, {!}
+*sc56::Send, \
+*sc2c::Send, `%
 *sc2d::Send, q
 *sc2e::Send, j
 *sc2f::Send, k

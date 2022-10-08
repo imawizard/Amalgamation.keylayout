@@ -3,12 +3,12 @@ is a mix of [dvorak](https://en.wikipedia.org/wiki/Dvorak_keyboard_layout)
 and [qwerty](https://en.wikipedia.org/wiki/QWERTY) for my personal needs.
 
 ## Layout
-![keyboard-layout](https://user-images.githubusercontent.com/1701648/178594018-df497bcd-4537-47ea-8edf-bb126874a3ca.png)
+![keyboard-layout](https://user-images.githubusercontent.com/1701648/194730002-820b5f9d-bc2f-4b5a-b693-143429baaeeb.png)
 
 Color|Meaning
 -----|--------
 turquoise | taken from dvorak
-pink | taken from qwerty
+green | taken from qwerty
 yellow | custom mapping
 
 (Image was generated with [Keyboard-Layout-Editor.com](http://www.keyboard-layout-editor.com) and [this keyboard-layout.json](https://gist.github.com/imawizard/25f131c568214d0be602718104a30a21))
