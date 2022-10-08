@@ -517,6 +517,19 @@ Pause::
 *sc33::Send, +^,
 *sc34::Send, +^.
 *sc35::Send, +^/
+;; F-keys
+*F1::Send, +^{F1}
+*F2::Send, +^{F2}
+*F3::Send, +^{F3}
+*F4::Send, +^{F4}
+*F5::Send, +^{F5}
+*F6::Send, +^{F6}
+*F7::Send, +^{F7}
+*F8::Send, +^{F8}
+*F9::Send, +^{F9}
+*F10::Send, +^{F10}
+*F11::Send, +^{F11}
+*F12::Send, +^{F12}
 
 ; .........................................................................}}}
 
@@ -578,6 +591,19 @@ Pause::
 *sc33::Send, +!,
 *sc34::Send, +!.
 *sc35::Send, +!/
+;; F-keys
+*F1::Send, +!{F1}
+*F2::Send, +!{F2}
+*F3::Send, +!{F3}
+*F4::Send, +!{F4}
+*F5::Send, +!{F5}
+*F6::Send, +!{F6}
+*F7::Send, +!{F7}
+*F8::Send, +!{F8}
+*F9::Send, +!{F9}
+*F10::Send, +!{F10}
+*F11::Send, +!{F11}
+*F12::Send, +!{F12}
 ;; Special
 *sc14b::Send, +!{Left}
 *sc14d::Send, +!{Right}
@@ -896,6 +922,19 @@ Pause::
 *sc33::Send, ^,
 *sc34::Send, ^.
 *sc35::Send, ^/
+;; F-keys
+*F1::Send, ^{F1}
+*F2::Send, ^{F2}
+*F3::Send, ^{F3}
+*F4::Send, ^{F4}
+*F5::Send, ^{F5}
+*F6::Send, ^{F6}
+*F7::Send, ^{F7}
+*F8::Send, ^{F8}
+*F9::Send, ^{F9}
+*F10::Send, ^{F10}
+*F11::Send, ^{F11}
+*F12::Send, ^{F12}
 ;; Special
 *sc0e::Send, ^{Backspace}
  vk01::Send, ^{LButton}              ; NOTE: using * breaks Cmd-Tab.
@@ -1113,7 +1152,7 @@ Pause::
 *sc12::Send, …
 *sc13::Send, £
 *sc14::Send, ¥
-*sc15::Send, ^{Right}
+*sc15::Send, ^{Right}                ; forward-word
 *sc16::Send, !{sc16}
 *sc17::Send, !{sc17}
 *sc18::Send, !{sc18}
@@ -1126,8 +1165,8 @@ Pause::
 *sc20::Send, €
 *sc21::Send, !{sc21}
 *sc22::Send, ü
-*sc23::Send, ^{Delete}
-*sc24::Send, ^{Backspace}
+*sc23::Send, ^{Delete}               ; kill-word
+*sc24::Send, ^{Backspace}            ; backward-kill-word
 *sc25::Send, !{sc25}
 *sc26::Send, !{sc26}
 *sc27::Send, ß
@@ -1140,11 +1179,24 @@ Pause::
 *sc2e::Send, !{sc2e}
 *sc2f::Send, #{sc2f}                 ; Open clipboard with {Win-v}
 *sc30::Send, ✗
-*sc31::Send, ^{Left}
+*sc31::Send, ^{Left}                 ; backward-word
 *sc32::Send, !{sc32}
 *sc33::Send, ₩
 *sc34::Send, ✔
 *sc35::Send, !{sc35}
+;; F-keys
+*F1::Send, !{F1}
+*F2::Send, !{F2}
+*F3::Send, !{F3}
+*F4::Send, !{F4}
+*F5::Send, !{F5}
+*F6::Send, !{F6}
+*F7::Send, !{F7}
+*F8::Send, !{F8}
+*F9::Send, !{F9}
+*F10::Send, !{F10}
+*F11::Send, !{F11}
+*F12::Send, !{F12}
 ;; Special
 *sc1c::Send, !{Enter}
 *vk01::Send, !{LButton}
@@ -1267,6 +1319,7 @@ Pause::
 *sc33::Send, ^!,
 *sc34::Send, ^!.
 *sc35::Send, ^!/
+
 ; .........................................................................}}}
 
 #if modifiers() == mod_ctrl
@@ -1324,6 +1377,19 @@ Pause::
 *sc33::Send, ^w
 *sc34::Send, ^v
 *sc35::Send, ^z
+;; F-keys
+*F1::Send, ^{F1}
+*F2::Send, ^{F2}
+*F3::Send, ^{F3}
+*F4::Send, ^{F4}
+*F5::Send, ^{F5}
+*F6::Send, ^{F6}
+*F7::Send, ^{F7}
+*F8::Send, ^{F8}
+*F9::Send, ^{F9}
+*F10::Send, ^{F10}
+*F11::Send, ^{F11}
+*F12::Send, ^{F12}
 ;; Special
 ;*sc39::Send, ^{Space}               ; Remap {Ctrl-Space} to {Alt-;} instead
 *sc39::Send, !{vk00ba}               ; because Hunt-and-Peck's hotkey is hardcoded.
