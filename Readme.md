@@ -35,6 +35,7 @@ cp Amalgamation.keylayout "$HOME/Library/Keyboard Layouts/Amalgamation.keylayout
 sudo cp Amalgamation.keylayout "/Library/Keyboard Layouts/Amalgamation.keylayout" # or for every user
 
 # Copy the karabiner mappings to make them appear under karabiner's complex modifications.
+curl -Lo karabiner-rules.json https://raw.githubusercontent.com/imawizard/dotfiles/master/karabiner/.config/karabiner/assets/complex_modifications/Amalgamation.json
 mkdir -p "$HOME/.config/karabiner/assets/complex_modifications' && cp karabiner-rules.json "$_/Amalgamation.json"
 ```
 
