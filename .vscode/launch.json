@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "autohotkey",
+            "request": "launch",
+            "name": "AutoHotkey Debugger",
+            "runtime": "${userHome}/scoop/apps/autohotkey2/current/AutoHotkey64.exe",
+            "program": "${workspaceFolder}/windows/amalgamation.ahk",
+            "env": {},
+            "stopOnEntry": false
+        },
+    ]
+}
