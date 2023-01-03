@@ -28,7 +28,7 @@ GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe cmd.exe")
 GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe nvim-qt.exe")
 GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe nvim.exe")
 GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe Emacs.exe")
-;GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe code.exe")
+GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe code.exe")
 GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe goneovim.exe")
 
 ; Apps to launch
@@ -988,7 +988,7 @@ Pause::{
 ;*sc30::
 *sc31::Send("{Left}")
 ;*sc32::
-;*sc33::
+*sc33::Send("^{Backspace}")
 ;*sc34::
 ;*sc35::
 
@@ -1092,8 +1092,8 @@ Pause::{
 *sc25::Send("!{sc25}")
 *sc26::Send("!{sc26}")
 *sc27::Send("ß")
-*sc28::Send("!{sc28}")
-*sc2b::Send("–")
+*sc28::Send("–")
+*sc2b::Send("!{sc28}")
 ;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Send("!{sc56}")
 *sc2c::Send("!{sc2c}")
@@ -1166,8 +1166,8 @@ Pause::{
 *sc25::Send("+!t")
 *sc26::Send("+!n")
 *sc27::Send("+!s")
-*sc28::Send("+!`"")
-*sc2b::Send("—")
+*sc28::Send("—")
+*sc2b::Send("+!`"")
 ;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::Send("+!{sc56}")
 *sc2c::Send("+!{sc2c}")
@@ -1321,17 +1321,17 @@ Pause::{
 
 ;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::return
-*sc02::Send("~")
+*sc02::return
 *sc03::Send("@")
 *sc04::Send("{#}")
 *sc05::Send("$")
 *sc06::return
 *sc07::return
-*sc08::return
+*sc08::Send("~")
 *sc09::Send("*")
 *sc0a::Send("/")
 *sc0b::Send("&")
-*sc0c::return
+*sc0c::Send("|")
 *sc0d::return
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send("?")
@@ -1357,10 +1357,10 @@ Pause::{
 *sc25::Send("T")
 *sc26::Send("N")
 *sc27::Send("S")
-*sc28::Send("'")
-*sc2b::Send("_")
+*sc28::Send("_")
+*sc2b::Send("'")
 ;; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Send("|")
+*sc56::return
 *sc2c::Send("{Text}^")
 *sc2d::Send("Q")
 *sc2e::Send("J")
@@ -1383,17 +1383,17 @@ Pause::{
 
 ;; §  1  2  3  4  5  6  7  8  9  0  -  =
 *sc29::return
-*sc02::Send("{Text}``")
+*sc02::return
 *sc03::Send("<")
 *sc04::Send(">")
 *sc05::Send("=")
 *sc06::return
 *sc07::return
-*sc08::return
+*sc08::Send("{Text}``")
 *sc09::Send("{+}")
 *sc0a::Send("(")
 *sc0b::Send(")")
-*sc0c::return
+*sc0c::Send("\")
 *sc0d::return
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send("{;}")
@@ -1419,10 +1419,10 @@ Pause::{
 *sc25::Send("t")
 *sc26::Send("n")
 *sc27::Send("s")
-*sc28::Send("`"")
-*sc2b::Send("-")
+*sc28::Send("-")
+*sc2b::Send("`"")
 ;; `  z  x  c  v  b  n  m  ,  .  /
-*sc56::Send("\")
+*sc56::return
 *sc2c::Send("`%")
 *sc2d::Send("q")
 *sc2e::Send("j")

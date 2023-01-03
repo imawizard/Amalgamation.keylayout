@@ -3,7 +3,7 @@ set unattended=no
 if "%1"=="/u" set unattended=yes
 
 set name=amalgamation
-set ahk=autohotkeyu64.exe
+set ahk=autohotkey2.exe
 
 set scriptdir=%~dp0
 set scriptfile=%scriptdir%%name%.ahk
