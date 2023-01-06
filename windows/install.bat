@@ -2,8 +2,9 @@
 set unattended=no
 if "%1"=="/u" set unattended=yes
 
-set name=amalgamation
-set ahk=autohotkey2.exe
+if "%name%"=="" set name=amalgamation
+if "%ahk%"=="" set ahk=autohotkey.exe
+if not "%runas%"=="no" (set runas=runas) else (set runas=)
 
 set scriptdir=%~dp0
 set scriptfile=%scriptdir%%name%.ahk
@@ -29,12 +30,12 @@ if errorlevel 1 (
 	goto die
 )
 
-echo Set fso = CreateObject("Scripting.FileSystemObject")                                    > "%destfile%"
-echo path = "%scriptfile%"                                                                  >> "%destfile%"
-echo filename = Chr(34) ^& fso.GetFileName(path) ^& Chr(34)                                 >> "%destfile%"
-echo dirname = fso.GetParentFolderName(path)                                                >> "%destfile%"
-echo CreateObject("Shell.Application").ShellExecute "%ahk%", filename, dirname, "runas", 0  >> "%destfile%"
-echo.                                                                                       >> "%destfile%"
+echo Set fso = CreateObject("Scripting.FileSystemObject")                                      > "%destfile%"
+echo path = "%scriptfile%"                                                                    >> "%destfile%"
+echo filename = Chr(34) ^& fso.GetFileName(path) ^& Chr(34)                                   >> "%destfile%"
+echo dirname = fso.GetParentFolderName(path)                                                  >> "%destfile%"
+echo CreateObject("Shell.Application").ShellExecute "%ahk%", filename, dirname, "%runas%", 0  >> "%destfile%"
+echo.                                                                                         >> "%destfile%"
 
 if not exist "%destfile%" (
 	echo  ^> Couldn't create '%destfile%'!

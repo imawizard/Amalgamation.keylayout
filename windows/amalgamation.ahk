@@ -8,14 +8,9 @@ A_IconTip := "Amalgamation.keylayout"
 
 SetStoreCapsLockMode(false)
 SetCapsLockState("AlwaysOff")
+SetWorkingDir(EnvGet("HOME"))
 
 ; Settings ................................................................{{{1
-
-; Env vars
-HOME := EnvGet("HOME")
-HOMEDRIVE := EnvGet("HOMEDRIVE")
-
-SetWorkingDir(HOME)
 
 ; Map Alt to Ctrl-Shift
 GroupAdd("MASK_CMD_LAYER_INCLUDES", "ahk_exe WindowsTerminal.exe")
@@ -35,21 +30,21 @@ GroupAdd("CONTROL_CHARS_EXCLUDES", "ahk_exe goneovim.exe")
 EXPLORER_WIN     := "ahk_class CabinetWClass"
 EXPLORER_RUN     := "explorer.exe"
 EDITOR_WIN       := "ahk_exe nvim-qt.exe"
-EDITOR_RUN       := HOME "scoop\apps\neovim\current\bin\nvim-qt.exe"
+EDITOR_RUN       := EnvGet("HOME") "\scoop\apps\neovim-nightly\current\bin\nvim-qt.exe"
 CODE_WIN         := "ahk_exe Code.exe"
-CODE_RUN         := HOME "AppData\Local\Programs\Microsoft VS Code\Code.exe"
+CODE_RUN         := EnvGet("LOCALAPPDATA") "\Programs\Microsoft VS Code\Code.exe"
 TERMINAL_WIN     := "ahk_exe WindowsTerminal.exe"
-TERMINAL_RUN     := "wt.exe"
+TERMINAL_RUN     := EnvGet("HOME") "\scoop\apps\windows-terminal\current\WindowsTerminal.exe"
 WEB_BROWSER_WIN  := "ahk_exe opera.exe"
-WEB_BROWSER_RUN  := HOMEDRIVE "Program Files\Opera\launcher.exe"
-TASK_MANAGER_WIN := "ahk_exe ProcessHacker.exe"
+WEB_BROWSER_RUN  := EnvGet("LOCALAPPDATA") "\Programs\Opera\launcher.exe"
+TASK_MANAGER_WIN := "ahk_exe SystemInformer.exe"
 TASK_MANAGER_RUN := "taskmgr.exe"
-GIT_GUI_WIN      := "ahk_exe gitextensions.exe"
-GIT_GUI_RUN      := HOME "scoop\apps\gitextensions\current\GitExtensions.exe"
+GIT_GUI_WIN      := "ahk_exe GitExtensions.exe"
+GIT_GUI_RUN      := EnvGet("HOME") "\scoop\apps\gitextensions\current\GitExtensions.exe"
 MAIL_WIN         := "ahk_exe outlook.exe"
 MAIL_RUN         := "outlook.exe"
 DOCSETS_WIN      := "ahk_exe zeal.exe"
-DOCSETS_RUN      := HOME "scoop\apps\zeal\current\zeal.exe"
+DOCSETS_RUN      := EnvGet("HOME") "\scoop\apps\zeal\current\zeal.exe"
 
 mod_none  := 0
 mod_cmd   := 1 << 0
