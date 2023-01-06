@@ -1,4 +1,4 @@
-﻿#Requires AutoHotkey v2.0-beta
+﻿#Requires AutoHotkey v2.0
 #SingleInstance force
 #UseHook true
 #WinActivateForce
@@ -64,10 +64,8 @@ modifiers() {
         || (GetKeyState("Ctrl", "P") && !GetKeyState("RAlt", "P")) {
         flags := flags | mod_ctrl
     }
-    if GetKeyState("LWin", "P") || GetKeyState("RWin", "P") {
-        flags := flags | mod_opt
-    }
-    if GetKeyState("sc137", "P") {
+    if GetKeyState("LWin", "P") || GetKeyState("RWin", "P")
+        || GetKeyState("sc137", "P") || GetKeyState("sc11d", "P") {
         flags := flags | mod_opt
     }
     return flags
@@ -113,10 +111,16 @@ Pause::{
 ;    3a  1e 1f 20 21 22 23 24 25 26 27 28 2b                      4b 4c 4d 4e
 ;  Shift `  z  x  c  v  b  n  m  ,  .  /      Shift        ^       1  2  3 Enter
 ;    2a 56 2c 2d 2e 2f 30 31 32 33 34 35       136        148     4f 50 51 11c
-;  Ctrl Win  Alt       Space      AltGr  Prt  Ctrl      <-  v  ->   0  .
-;    1d 15b  38          39        138   137   11d    14b 150 14d  52 53
-;                                        15d
-;                                        15c
+;  Ctrl Win  Alt       Space      AltGr  Win  Ctrl      <-  v  ->   0  .
+;    1d 15b  38          39        138   15c   11d    14b 150 14d  52 53
+;
+; ThinkPad E14:
+;  - instead of RWin there's PrintScreen (sc137)
+; Dell Precision 5560:
+;  - there's no RWin, to the right of AltGr is RCtrl
+; Filco Majestouch 2:
+;  - to the right of RWin there's AppsKey (sc15d)
+;
 ; For ahk's Send:
 ;   ^ Ctrl
 ;   + Shift
@@ -149,11 +153,8 @@ Pause::{
 *sc15b::return
 *sc15c::return
 
-; Disable PrintScreen if pressed alone
-*sc137::return
-*sc15d::return
-
-; RAlt mappings ...........................................................{{{1
+*sc137::return ; Disable PrintScreen
+*sc15d::return ; Disable AppsKey
 
 #HotIf GetKeyState("RAlt", "P") && !GetKeyState("Shift", "P")
 *sc39::OpenSearch()
@@ -161,7 +162,10 @@ Pause::{
 #HotIf GetKeyState("RAlt", "P") && GetKeyState("Shift", "P")
 *sc1c::OpenTerminal()
 
-; ..........................................................................}}}
+#HotIf (WinActive("ahk_exe WindowsTerminal.exe") || WinActive("ahk_exe opera.exe"))
+    && modifiers() == mod_cmd | mod_shift
+*sc1a::Send("^{PgUp}")
+*sc1b::Send("^{PgDn}")
 
 #Hotif WinActive("ahk_exe explorer.exe")
     && modifiers() == mod_none ; ..........................................{{{1
@@ -1256,8 +1260,8 @@ Pause::{
 *sc0c::return
 *sc0d::return
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
-*sc10::Send("^q")                    ; C-@
-*sc11::Send("^{^}")                  ; C-^
+*sc10::Send("^{u+0040}")             ; C-@
+*sc11::Send("^{u+005e}")             ; C-^
 *sc12::return
 *sc13::Send("^p")
 *sc14::Send("^y")
@@ -1267,7 +1271,7 @@ Pause::{
 *sc18::Send("^r")
 *sc19::Send("^l")
 *sc1a::Send("^c")                    ; Map to C-c (instead of C-[)
-*sc1b::Send("^{vkdd}")
+*sc1b::Send("^{u+005d}")             ; C-]
 ;; a  s  d  f  g  h  j  k  l  ;  '  \
 *sc1e::Send("^a")
 *sc1f::Send("^o")
@@ -1279,8 +1283,8 @@ Pause::{
 *sc25::Send("^t")
 *sc26::Send("^n")
 *sc27::Send("^s")
-*sc28::Send("^_")                    ; C-_
-*sc2b::Send("^{#}")                  ; C-\
+*sc28::Send("^{u+005f}")             ; C-_
+*sc2b::Send("^{u+005c}")             ; C-\
 ;; `  z  x  c  v  b  n  m  ,  .  /
 *sc56::return
 *sc2c::return
@@ -1308,7 +1312,8 @@ Pause::{
 *F12::Send("^{F12}")
 ;; Special
 ;*sc39::Send("^{Space}")             ; Remap {Ctrl-Space} to {Alt-;} instead
-*sc39::Send("!{vk00ba}")             ; because Hunt-and-Peck's hotkey is hardcoded.
+*sc39::Send("!{u+003b}")             ; because Hunt-and-Peck's hotkey is hardcoded.
+
 
 ; ..........................................................................}}}
 
