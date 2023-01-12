@@ -61,7 +61,7 @@ modifiers() {
         flags := flags | mod_shift
     }
     if GetKeyState("Capslock", "P")
-        || (GetKeyState("Ctrl", "P") && !GetKeyState("RAlt", "P")) {
+        || (GetKeyState("LCtrl", "P") && !GetKeyState("RAlt", "P")) {
         flags := flags | mod_ctrl
     }
     if GetKeyState("LWin", "P") || GetKeyState("RWin", "P")
@@ -539,7 +539,7 @@ Pause::{
 *sc0a::Send("+^9")
 *sc0b::Send("+^0")
 *sc0c::Send("+^-")
-*sc0d::Send("+^=")
+*sc0d::Send("+^{+}")
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 ;*sc10::Send("+^q")                  ; Don't shadow Cmd-q
 *sc11::Send("+^w")
@@ -613,7 +613,7 @@ Pause::{
 *sc0a::Send("+!9")
 *sc0b::Send("+!0")
 *sc0c::Send("+!-")
-*sc0d::Send("+!=")
+*sc0d::Send("+!{+}")
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send("+!q")
 *sc11::Send("+!w")
@@ -807,7 +807,7 @@ Pause::{
 *sc0a::Send("^9")
 *sc0b::Send("^0")
 *sc0c::Send("^-")
-*sc0d::Send("^=")
+*sc0d::Send("^{+}")
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send("!{F4}")                 ; Quit active application
                                      ; (^{F4} or !{Space}S work as well, latter one
@@ -872,6 +872,7 @@ Pause::{
     Send("{LAlt down}{Tab}")
     return
 }
+*sc2a::Send("{LCtrl down}{LShift}{LCtrl up}")
 
 ; ..........................................................................}}}
 
@@ -890,7 +891,7 @@ Pause::{
 *sc0a::Send("+^9")
 *sc0b::Send("+^0")
 *sc0c::Send("+^-")
-*sc0d::Send("+^=")
+*sc0d::Send("+^{+}")
 ;; q  w  e  r  t  y  u  i  o  p  [  ]
 *sc10::Send("+^q")
 *sc11::Send("+^w")
@@ -1122,6 +1123,7 @@ Pause::{
 *sc1c::Send("!{Enter}")
 *sc0e::Send("!{Backspace}")
 *vk01::Send("!{LButton}")
+*sc2a::Send("{LAlt down}{LShift}{LAlt up}")
 
 ; ..........................................................................}}}
 
@@ -1313,7 +1315,6 @@ Pause::{
 ;; Special
 ;*sc39::Send("^{Space}")             ; Remap {Ctrl-Space} to {Alt-;} instead
 *sc39::Send("!{u+003b}")             ; because Hunt-and-Peck's hotkey is hardcoded.
-
 
 ; ..........................................................................}}}
 
