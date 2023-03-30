@@ -9,7 +9,7 @@ A_IconTip := "Amalgamation.keylayout"
 
 SetStoreCapsLockMode(false)
 SetCapsLockState("AlwaysOff")
-SetWorkingDir(EnvGet("HOME"))
+SetWorkingDir(EnvGet("USERPROFILE"))
 
 scrollInverted := MonitorGetCount() > 1
 toggleScroll(*) {
@@ -938,6 +938,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 ; ..........................................................................}}}
 
 #HotIf modifiers() == mod_opt ; ...........................................{{{1
+    || modifiers() == mod_opt | mod_shift | mod_ctrl | mod_cmd ; Office key
 
 ;; §  1  2  3  4  5  6  7  8  9  0  -  =
 ;*sc29::Send("!{sc29}")

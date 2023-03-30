@@ -1,25 +1,31 @@
+ScoopDir() {
+    static path := Trim(CmdRet("scoop.cmd config root_path"), "`r`n") ||
+        EnvGet("USERPROFILE") "\scoop"
+    return path
+}
+
 RunTerminal(wd) {
-    prog := EnvGet("HOME") "\scoop\apps\wezterm-nightly\current\wezterm-gui.exe"
+    prog := ScoopDir() "\apps\wezterm-nightly\current\wezterm-gui.exe"
     ShellRun(prog, "start --cwd .", wd)
 }
 
 RunEditor(filename, wd) {
-    prog := EnvGet("HOME") "\scoop\apps\neovim-nightly\current\bin\nvim-qt.exe"
+    prog := ScoopDir() "\apps\neovim-nightly\current\bin\nvim-qt.exe"
     ShellRun(prog, "`"" filename "`"", wd)
 }
 
 RunVSCode(filename, wd) {
-    prog := EnvGet("LOCALAPPDATA") "\Programs\Microsoft VS Code\Code.exe"
+    prog := ScoopDir() "\apps\vscode\current\Code.exe"
     ShellRun(prog, "`"" filename "`"", wd)
 }
 
 RunGitGui(wd) {
-    prog := EnvGet("HOME") "\scoop\apps\gitextensions\current\GitExtensions.exe"
+    prog := ScoopDir() "\apps\gitextensions\current\GitExtensions.exe"
     ShellRun(prog, "browse `"" wd "`"", wd)
 }
 
 OpenTerminal() {
-    wd := EnvGet("HOME")
+    wd := EnvGet("USERPROFILE")
     if WinGetProcessName("A") == "explorer.exe" {
         path := GetSHAppFolderPath()
         if path && Substr(path, 1, 2) !== "::" {
@@ -160,8 +166,8 @@ CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
     outPipeWrite := 0
     DllCall(
         "CreatePipe",
-        "Ptr*", outPipeRead,
-        "Ptr*", outPipeWrite,
+        "Ptr*", &outPipeRead,
+        "Ptr*", &outPipeWrite,
         "Ptr", 0,
         "UInt", 0,
         "Int",
@@ -175,12 +181,12 @@ CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
     )
 
     siSize := A_PtrSize*4 + 4*8 + A_PtrSize*5
-    STARTUPINFO := Buffer(siSize)
-    NumPut(siSize,               STARTUPINFO, 0)
-    NumPut(STARTF_USESTDHANDLES, STARTUPINFO, A_PtrSize*4 + 4*7)
-    NumPut(inPipeRead,           STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*2)
-    NumPut(outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*3)
-    NumPut(outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*4)
+    STARTUPINFO := Buffer(siSize, 0)
+    NumPut("UInt",  siSize,               STARTUPINFO, 0)
+    NumPut("UInt",  STARTF_USESTDHANDLES, STARTUPINFO, A_PtrSize*4 + 4*7)
+    NumPut("Int64", inPipeRead,           STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*2)
+    NumPut("Int64", outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*3)
+    NumPut("Int64", outPipeWrite,         STARTUPINFO, A_PtrSize*4 + 4*8 + A_PtrSize*4)
 
     PROCESS_INFORMATION := Buffer(A_PtrSize*2 + 4*2)
     ret := DllCall(
@@ -243,11 +249,11 @@ CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
         "Ptr", outPipeRead,
         "Ptr", buf,
         "UInt", buf.Size,
-        "UInt*", read,
+        "UInt*", &read,
         "UInt", 0,
         "Int",
     ) {
-        text := StrGet(&buf, read, encoding)
+        text := StrGet(buf, read, encoding)
         (callback && callback.Call(text))
         output .= text
     }
@@ -257,8 +263,8 @@ CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
         "Int",
     )
 
-    hProcess := NumGet(PROCESS_INFORMATION, 0)
-    hThread := NumGet(PROCESS_INFORMATION, A_PtrSize)
+    hProcess := NumGet(PROCESS_INFORMATION, 0, "Int64")
+    hThread := NumGet(PROCESS_INFORMATION, A_PtrSize, "Int64")
     DllCall(
         "CloseHandle",
         "Ptr", hProcess,
