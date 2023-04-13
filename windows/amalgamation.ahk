@@ -156,6 +156,21 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 
 ; ..........................................................................}}}
 
+#Hotif WinActive("ahk_exe onenote.exe") ; .................................{{{1
+    && modifiers() == mod_cmd | mod_shift
+*sc1a::Send("^+{Tab}")
+*sc1b::Send("^{Tab}")
+
+#Hotif WinActive("ahk_exe onenote.exe") && modifiers() == mod_cmd
+*sc1a::Send("^{PgUp}")
+*sc1b::Send("^{PgDn}")
+
+#Hotif WinActive("ahk_exe onenote.exe") && modifiers() == mod_ctrl
+*sc13::Send("^{Up}")
+*sc26::Send("^{Down}")
+
+; ..........................................................................}}}
+
 #Hotif WinActive("ahk_exe explorer.exe") ; ................................{{{1
     && modifiers() == mod_none
 *sc1c::ExplorerRename()
