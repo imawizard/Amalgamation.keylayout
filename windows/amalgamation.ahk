@@ -396,7 +396,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 *sc16::Send("!g")
 *sc17::Send("!c")
 *sc18::Send("!r")
-*sc19::Send("!l")
+*sc19::return                        ; !l would result in LockWorkStation.
 *sc1a::Send("![")
 *sc1b::Send("!]")
 ;; a  s  d  f  g  h  j  k  l  ;  '  \
@@ -979,7 +979,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 *sc16::Send("!g")
 *sc17::Send("!c")
 *sc18::Send("!r")
-*sc19::Send("!l")
+*sc19::return                        ; !l would result in LockWorkStation.
 *sc1a::Send("![")
 *sc1b::Send("!]")
 ;; a  s  d  f  g  h  j  k  l  ;  '  \
