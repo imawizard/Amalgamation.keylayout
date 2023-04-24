@@ -301,7 +301,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 *sc02::Send("+!1")
 *sc03::Send("+!2")
 ;*sc04::Send("+!3")                  ; Don't shadow Cmd-Shift-3
-*sc05::Send("+!4")
+;*sc05::Send("+!4")                  ; Don't shadow Cmd-Shift-4
 *sc06::Send("+!5")
 *sc07::Send("+!6")
 *sc08::Send("+!7")
@@ -377,7 +377,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 *sc02::Send("!1")
 *sc03::Send("!<")
 ;*sc04::Send("!>")                   ; Don't shadow Cmd-Shift-3
-*sc05::Send("!=")
+;*sc05::Send("!=")                   ; Don't shadow Cmd-Shift-4
 *sc06::Send("!5")
 *sc07::Send("!6")
 *sc08::Send("!``")
@@ -843,7 +843,7 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 *sc02::Send("+^1")
 *sc03::Send("+^2")
 *sc04::Send("{PrintScreen}")         ; Take a screenshot
-*sc05::Send("+^4")
+*sc05::OpenSnipAndSketch()
 *sc06::Send("+^5")
 *sc07::Send("+^6")
 *sc08::Send("+^7")

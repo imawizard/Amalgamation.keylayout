@@ -47,6 +47,10 @@ OpenTaskView() {
     Send("#{Tab}")
 }
 
+OpenSnipAndSketch() {
+    Run("explorer ms-screenclip:", "", "Hide")
+}
+
 WS_EX_APPWINDOW  := 0x40000
 WS_EX_TOOLWINDOW := 0x80
 GW_OWNER         := 4
