@@ -133,15 +133,15 @@ GroupAdd("DONT_DO_EMACS_REMAPS", "ahk_exe wezterm-gui.exe")
 
 #Hotif ; ..................................................................{{{1
 
-; Disable Capslock if pressed alone
-*sc3a::return
+; If pressed alone try to release stuck keys
+*sc3a::Send("{Blind}{Space Up}{Ctrl Up}{Shift Up}{Alt Up}")
 
 ; Disable Alt if pressed alone
 *sc38::return
 *sc38 Up::{
     global lalt_down
     if lalt_down ?? false == true {
-        Send("{LAlt up}")
+        Send("{LAlt Up}")
         lalt_down := false
     }
     return
