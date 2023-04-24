@@ -29,7 +29,9 @@ mwm := MiguruWM({
 })
 
 ; Disable Right-Alt if pressed alone
-*sc138::return
+; FIXME: If not commented out and another ahk-script is started afterwards,
+; hotkeys get overwritten/invalidated.
+;*sc138::return
 
 #HotIf GetKeyState("RAlt", "P") && !GetKeyState("Shift", "P") ; ...........{{{1
 

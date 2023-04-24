@@ -147,6 +147,8 @@ Launch(win, cmd, forceSingleInstance := true, runAsAdmin := false, minimizeIfAct
 }
 
 ; Taken from https://autohotkey.com/boards/viewtopic.php?f=76&t=84266&sid=eff012cadb7a851b2c18f5f03b68408f
+; This is an alternative to ComObject("WScript.Shell") that supports executing
+; a command without it creating a window.
 CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
     inPipeRead := 0
     inPipeWrite := 0
@@ -287,6 +289,7 @@ CmdRet(cmd, stdin := "", callback := "", encoding := "CP0") {
 ; Also see https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
 ; and https://devblogs.microsoft.com/oldnewthing/20130318-00/?p=4933
 ; Operation can be one of {explorer find open print runas}
+; Doesn't inherit admin privileges unlike Run, CreateProcess etc.
 ShellRun(cmd, params := "", dir := "", operation := "open", show := SW_SHOWNORMAL) {
     windows := ComObject("Shell.Application").Windows
     hwnd := Buffer(A_PtrSize)
