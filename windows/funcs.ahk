@@ -5,7 +5,7 @@ ScoopDir() {
 }
 
 RunTerminal(wd) {
-    prog := ScoopDir() "\apps\wezterm-nightly\current\wezterm-gui.exe"
+    prog := ScoopDir() "\apps\wezterm\current\wezterm-gui.exe"
     ShellRun(prog, "start --cwd .", wd)
 }
 
